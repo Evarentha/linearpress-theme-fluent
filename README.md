@@ -5,130 +5,117 @@
   Made by MoyuZJ in China with ♥
 -->
 
-# Fluent UI 主题（fluentui-theme）
+# Fluent UI Theme / Fluent UI 主题
 
-LinearPress 的完整 **Fluent 2** 主题插件：前台 + 后台全部界面 Fluent 化，内置浅色/深色模式，
-Fluent Web Components 全量打包进 `public/vendor/`，完全离线、零外部依赖（不依赖任意 CDN）。
+A complete **Fluent 2** theme for LinearPress: the whole frontend **and** admin are Fluent-styled, with built-in light/dark modes. The Fluent Web Components bundle is vendored into `public/vendor/` — **fully offline, zero external dependencies** (no CDN needed).
 
-> 本仓库是 LinearPress 主题插件 **fluentui-theme** 的独立开发仓库。主题即插件：
-> 用 `views` 目录覆盖全局模板、`web.register()` 扩展路由、Hook 注入配置。
+LinearPress 的完整 **Fluent 2** 主题插件：前台 + 后台全部界面 Fluent 化，内置浅色/深色模式。Fluent Web Components 全量打包进 `public/vendor/`，**完全离线、零外部依赖**。
 
-## 插件化的优势
+> Independent plugin repository for LinearPress **theme** plugin `fluentui-theme`. A theme is just a plugin: it overrides global templates with a `views` directory, extends routes with `web.register()`, and injects configuration through hooks.
+> 这是 LinearPress 主题插件 **fluentui-theme** 的独立仓库。主题即插件：用 `views` 目录覆盖全局模板、`web.register()` 扩展路由、Hook 注入配置。
 
-- **做主题不改核心**：覆盖 `layouts/web`、`layouts/admin`、`web/index`、`web/post`、后台十个核心页——全部通过视图覆盖机制实现，不用 fork 本体一行代码。
-- **即装即用可换**：想换主题？停用本插件、启用另一个主题即可，核心与其它插件不受影响。
-- **外观可配置**：后台「主题外观」页可视化调节显示开关/字号/品牌色，配置存插件配置，**保存即生效、无需重启**。
+## Why Plugins? / 插件化的优势
 
-## 功能
+- **Theme without forking** —— overrides `layouts/web`, `layouts/admin`, `web/index`, `web/post` and ten core admin pages purely through the view-override mechanism.
+  **做主题不改核心**——全部通过视图覆盖机制实现，不用 fork 本体一行代码。
+- **Swappable** —— disable this theme and enable another; core and other plugins are unaffected.
+  **即装即用可换**——停用本主题换别的主题即可，核心与其它插件不受影响。
+- **Configurable** —— the "Theme Appearance" page in admin visualizes toggles/font sizes/brand colors; config is saved to plugin config — **applies instantly, no restart**.
+  **外观可配置**——后台「主题外观」页可视化调节显示开关/字号/品牌色，配置存插件配置，**保存即生效、无需重启**。
 
-- **前台**：布局、首页文章列表、文章阅读页、评论区、归档页（`/archive`）、登录/注册页、错误页全部 Fluent 化。
-- **后台**：控制台应用壳（左侧导航/内容区/右侧详情面板）、十个核心管理页全部 Fluent 化；现代编辑器等插件页面渲染在 Fluent 外壳内。
-- **深色模式**：前台与后台 header 均有切换开关，默认跟随系统；首屏无闪烁（CSS 变量预置 + 内联脚本）。
-- **自包含**：Fluent 令牌是纯 CSS 变量（浅/深两套），组件全量 bundle 打进包内，不依赖 unpkg/jsdelivr/Tailwind。
+## Features / 功能
 
-## 主题外观配置（已实现）
+- **Frontend / 前台**：layout, home post list, article page, comments, archive (`/archive`), login/register and error pages — all Fluent. 布局、首页列表、文章页、评论区、归档、登录/注册、错误页全 Fluent 化。
+- **Admin / 后台**：admin app shell（left nav / content / right panel）+ ten core pages; plugin pages (modern editor, media library, 2FA, captcha…) render inside the Fluent shell with their own CSS. 应用壳 + 十个核心页；插件页面渲染在 Fluent 外壳内。
+- **Dark mode / 深色模式**：switch in both frontend and admin headers, follows the system by default; no flash on first paint（CSS variables + inline pre-paint script）.
+- **Self-contained / 自包含**：Fluent tokens as pure CSS variables（light + dark）, components fully bundled — no unpkg/jsdelivr/Tailwind.
 
-后台左侧「🎨 主题外观」或插件卡片「主题外观」进入 `/admin/fluentui-theme/settings`：
+## Appearance Configuration / 主题外观配置
 
-- **显示开关**：首页眉题 / 主标题 / 副标题是否显示
-- **字号**：主标题、副标题 px 预设
-- **品牌色**：浅色模式与深色模式各自的主色（按钮、链接、徽标等全量跟随，衍生色由 color-mix 推导）
-- **实时预览**：修改即时生效，无需保存即可预览
-- **恢复默认**：一键回到官方 Fluent 蓝
+Admin → 🎨 Theme Appearance（`/admin/fluentui-theme/settings`）:
 
-## 安装
+- **Show/hide** / 显示开关：home eyebrow / title / subtitle
+- **Font size** / 字号：title & subtitle px presets
+- **Brand color** / 品牌色：light & dark mode brand colors（buttons/links/badges follow; derived shades via `color-mix`）
+- **Live preview** / 实时预览：changes apply instantly without saving
+- **Reset** / 恢复默认：back to official Fluent blue
 
-方式一（推荐，开发/自托管）：同步到运行目录
+## Install / 安装
 
 ```bash
+# Option 1 — workspace sync（工作区同步，推荐）
 cd base
 sh scripts/sync-plugins.sh fluentui-theme
 npm run typecheck
-# 重启服务即可生效
+# restart to take effect / 重启生效
+
+# Option 2 — admin ZIP / npm install（后台 ZIP / npm 安装）
 ```
 
-方式二：插件管理页 → 上传 ZIP / npm 安装（需先把插件打包）。
-
-## 本地开发：怎么拉 / 怎么改 / 怎么跑
+## Local Development / 本地开发：怎么拉 / 怎么改 / 怎么跑
 
 ```bash
-# 1. 拉：克隆到工作区（或直接放入 src/plugins/fluentui-theme，目录名必须等于插件 id）
-git clone <本仓库地址> Plugins/fluentui-theme
+# 1. Pull / 拉
+git clone https://github.com/Averithen/linearpress-theme-fluent Plugins/fluentui-theme
 
-# 2. 改：直接编辑 index.ts / views/ / public/ / src/config.ts
+# 2. Edit / 改：index.ts / views/ / public/ / src/config.ts
 
-# 3. 跑：同步 + 启动
+# 3. Run / 跑
 cd base
 npm install
-npm run db:init          # 首次
+npm run db:init
 sh scripts/sync-plugins.sh fluentui-theme
-npm run dev              # http://localhost:3000
+npm run dev              # → http://localhost:3000
 ```
 
-改代码后重新 `sh scripts/sync-plugins.sh fluentui-theme` 并重启服务即可看到效果。
+After changes：`sh scripts/sync-plugins.sh fluentui-theme` then restart / 改后重新同步并重启。
 
-## 视图注册机制（关键）
+## View Registration / 视图注册机制（key / 关键）
 
-LinearPress 的 Express `views` 搜索顺序分两个阶段——bootstrap 按 `load_order` 收集 manifest 的 `views` 字段，
-activate 阶段再按 `load_order` 依次执行插件调用 `web.viewDir()` 追加的目录，最终数组反转后
-「最后追加的目录最先被查找」。因此：
+Express views order is built in two phases: bootstrap collects manifest `views` by `load_order`; **activate re-appends dirs from `web.viewDir()` calls**, and the final array is reversed so "last appended wins". Therefore：
 
-- 本主题**刻意不在 plugin.json 声明 `views` 字段**，改在入口 `index.ts` 的 activate 阶段调用 `web.viewDir()` 注册
-  （与 colorful-profiles 同款机制），保证视图目录排在查询顺序最前、覆盖核心与其它插件视图。
-- 想让某个插件的页面反超本主题：在「插件」页把它拖到本主题**之后**（`load_order` 更大，越晚激活的插件 viewDir 越靠前）。
+- This theme **deliberately omits the `views` field in plugin.json** and registers via `web.viewDir()` in `index.ts`（same mechanism as colorful-profiles）so it wins view lookups.
+  **刻意不在 plugin.json 声明 views 字段**，改为 activate 阶段 `web.viewDir()` 注册，保证视图覆盖优先。
+- To let another plugin's page win：drag it AFTER this theme in the Plugins page（larger `load_order`）.
+  **想让某插件页面反超**：在「插件」页把它拖到本主题之后。
 
-## 静态资源
+## Assets / 静态资源
 
-| 文件 | 作用 |
+| File / 文件 | Purpose / 作用 |
 | --- | --- |
-| `public/vendor/web-components-all.min.js` | `@fluentui/web-components@3.1.3` 全量 ESM bundle（已内联全部依赖） |
-| `public/fluent-tokens.css` | 设计令牌：`:root` 浅色 + `:root[data-theme="dark"]` 深色 |
-| `public/fluentui-theme.css` | 前台样式（`.fluent-site` 作用域） |
-| `public/fluentui-admin.css` | 后台样式（`.fluent-admin` 作用域） |
-| `public/fluent-init.js` | 前台/后台共用：组件守卫注册、深色切换、后台抽屉交互 |
+| `public/vendor/web-components-all.min.js` | `@fluentui/web-components@3.1.3` bundled ESM（deps inlined） |
+| `public/fluent-tokens.css` | Design tokens：`:root` light + `:root[data-theme="dark"]` dark |
+| `public/fluentui-theme.css` | Frontend styles（scoped `.fluent-site`） |
+| `public/fluentui-admin.css` | Admin styles（scoped `.fluent-admin`） |
+| `public/fluent-init.js` | Guarded component registration, dark mode, admin drawer |
 
-重新拉取 bundle：`node scripts/vendor.mjs`（需联网一次，结果提交 git）；
-可选生成官方令牌：`npm i @fluentui/tokens@1.0.0-alpha.24 && node scripts/generate-tokens.mjs`。
+Re-vendor：`node scripts/vendor.mjs`（needs network once，commit the result）；optional official tokens：`npm i @fluentui/tokens@1.0.0-alpha.24 && node scripts/generate-tokens.mjs`。
 
-## 与其它插件共存
+## Coexistence / 与其它插件共存
 
-**默认接管**：`layouts/web` / `layouts/admin`、`web/index|post|archive`、`auth/login|register`、`error`、
-后台 `dashboard|posts|comments|users|groups|plugins|plugin-settings|settings|seo|about`。
+**Default takeover / 默认接管**：`layouts/web|admin`, `web/index|post|archive`, `auth/login|register`, `error`, admin `dashboard|posts|comments|users|groups|plugins|plugin-settings|settings|seo|about`.
+**Not overridden / 刻意不覆盖**：`admin/post-edit`（modern editor）、OOBE、plugin pages（media/2FA/captcha/shuoshuo/custom-pages/import/SSO/colorful-profiles…）— they render inside the Fluent shell with their own CSS.
+**Same-path conflicts / 同路径冲突**（shuoshuo `web/index`、advanced-comments `web/post`、colorful-profiles `layouts/web`）：theme wins by default; raise a plugin's `load_order` to let its page win. The templates are compatible with shuoshuo helpers（`isShuoShuo`/`shuoshuoHtml`）and easy-captcha's injection anchor.
 
-**刻意不覆盖**：`admin/post-edit`（现代编辑器）、OOBE、各插件自有页面（媒体库/2FA/验证码/说说管理/自定义页面/导入/SSO/多彩资料 等）——它们渲染在 Fluent 外壳内并自带样式。
-
-**同路径冲突**（如 shuoshuo 的 `web/index`、高级评论的 `web/post`、多彩资料的 `layouts/web`）：默认本主题接管；
-想保留某插件的专属页面，把它在「插件」页拖到本主题之后（`load_order` 更大）即可。
-前台模板兼容 shuoshuo 的模板辅助（`isShuoShuo` / `shuoshuoHtml`）与 easy-captcha 的验证码注入锚点。
-
-## 目录结构
+## Directory / 目录结构
 
 ```text
 fluentui-theme/
 ├── plugin.json            Manifest（type: theme）
-├── index.ts               入口：视图注册 / /archive / site:locals 注入 / 主题外观路由
-├── src/config.ts          外观配置：Schema / 表单解析 / CSS 覆盖生成
-├── views/
-│   ├── layouts/web.ejs|admin.ejs
-│   ├── web/index|post|archive.ejs
-│   ├── auth/login|register.ejs
-│   ├── error.ejs
-│   └── admin/*.ejs        后台 10 个核心页 + 主题外观设置页
-├── public/
-│   ├── vendor/            Fluent Web Components 全量 bundle
-│   ├── fluent-tokens.css  设计令牌（浅/深）
-│   ├── fluentui-theme.css 前台样式
-│   ├── fluentui-admin.css 后台样式
-│   └── fluent-init.js     组件守卫注册 + 深色模式 + 后台抽屉
+├── index.ts               entry：viewDir registration / /archive / site:locals / appearance routes
+├── src/config.ts          appearance schema / form parsing / CSS override builder
+├── views/                 layouts / web / auth / error / admin (10 core + appearance settings)
+├── public/                vendor bundle + tokens + front/admin styles + init script
 └── scripts/               vendor / generate-tokens
 ```
 
-## 贡献与发布
+## Contribute & Release / 贡献与发布
 
-- conventional commits（`feat:` / `fix:` / `docs:`）；提交前 `cd base && npm run typecheck`
-- 版本：`git tag v1.0.0 && git push --tags`
-- License：MIT（见仓库 LICENSE）
+- conventional commits（`feat:` / `fix:` / `docs:`）；before commit：`cd base && npm run typecheck`
+- Version：`git tag v1.0.0 && git push --tags`
+- License：MIT（LICENSE）
 
-## 二〇三期规划
+## Roadmap / 规划
 
-卡片密度、页脚开关、自定义背景色等更多视觉项（可在 `src/config.ts` 的 Schema 上增量扩展）。
+Card density, footer toggles, custom background color（increment on `src/config.ts` schema）.
+卡片密度、页脚开关、自定义背景色等（可在配置 Schema 上增量扩展）。
