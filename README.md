@@ -56,7 +56,7 @@ npm run typecheck
 
 ```bash
 # 1. Pull / 拉
-git clone https://github.com/Averithen/linearpress-theme-fluent Plugins/fluentui-theme
+git clone https://github.com/Evarentha/linearpress-theme-fluent Plugins/fluentui-theme
 
 # 2. Edit / 改：index.ts / views/ / public/ / src/config.ts
 
