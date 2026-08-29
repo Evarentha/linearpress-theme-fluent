@@ -1,0 +1,9 @@
+<!--
+  Author: MoyuZJ
+  Team: LinearTeam
+  Contact: linearteam@foxmail.com
+  Made by MoyuZJ in China with ♥
+  Fluent UI 主题 —— 归档页（新增路由 /archive，由 index.ts 提供 groups）
+-->
+
+<section class="f-archive"><div class="f-intro"><p class="f-eyebrow">ARCHIVE</p><h1 class="f-title">归档</h1><p class="f-lede">全部文章按时间归档。</p></div><% groups.forEach(group => { %><section class="f-archive-group"><h2 class="f-section-title"><%= group.month %><span class="f-count"><%= group.items.length %> 篇</span></h2><div class="f-posts"><% group.items.forEach(post => { %><div class="f-archive-row"><span class="f-meta-date"><%= formatDate(post.created_at) %></span><a class="f-archive-link" href="<%= postUrl(post) %>"><%= post.title %></a></div><% }) %></div></section><% }) %><% if (!groups.length) { %><p class="f-empty">还没有任何文章。</p><% } %></section>

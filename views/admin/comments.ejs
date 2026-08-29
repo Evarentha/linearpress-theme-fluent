@@ -1,0 +1,9 @@
+<!--
+  Author: MoyuZJ
+  Team: LinearTeam
+  Contact: linearteam@foxmail.com
+  Made by MoyuZJ in China with ♥
+  Fluent UI 主题 —— 评论审核（覆盖核心 admin/comments）
+-->
+
+<div class="a-page-head"><div><h1 class="a-title">评论审核</h1><p class="a-eyebrow"><%= comments.length %> 条评论</p></div></div><div class="a-table-wrap"><table class="a-table"><thead><tr><th>文章</th><th>评论</th><th>状态</th><th class="a-th-actions">操作</th></tr></thead><tbody><% comments.forEach(comment => { %><tr><td class="a-cell-title"><%= comment.post_title %></td><td class="a-cell-muted"><%= comment.content %></td><td><fluent-badge appearance="<%= comment.status === 'approved' ? 'filled' : 'outline' %>" color="<%= comment.status === 'pending' ? 'warning' : comment.status === 'spam' ? 'danger' : 'brand' %>"><%= comment.status %></fluent-badge></td><td class="a-cell-actions"><% if (comment.status !== 'approved') { %><form class="a-inline-form" method="post" action="/admin/comments/<%= comment.id %>/status"><input type="hidden" name="status" value="approved"><fluent-button type="submit" appearance="outline" size="small">通过</fluent-button></form><% } %><form class="a-inline-form" method="post" action="/admin/comments/<%= comment.id %>/delete" onsubmit="return confirm('删除该评论，继续吗？')"><fluent-button type="submit" appearance="outline" size="small">删除</fluent-button></form></td></tr><% }) %></tbody></table></div>

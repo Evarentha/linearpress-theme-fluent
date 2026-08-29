@@ -1,0 +1,9 @@
+<!--
+  Author: MoyuZJ
+  Team: LinearTeam
+  Contact: linearteam@foxmail.com
+  Made by MoyuZJ in China with ♥
+  Fluent UI 主题 —— 插件配置（覆盖核心 admin/plugin-settings）
+-->
+
+<div class="a-page-head"><div><h1 class="a-title"><%= plugin.name %> 设置</h1><p class="a-eyebrow"><%= plugin.id %> / v<%= plugin.version %></p></div></div><% if (notice === 'saved') { %><fluent-message-bar intent="success"><div>配置已保存。</div></fluent-message-bar><% } %><section class="a-panel-card a-config-card"><div class="a-group-heading"><div><h2 class="a-section-title">标准配置</h2><p class="a-eyebrow">插件暴露的 config JSON</p></div></div><form method="post" action="/admin/plugins/<%= plugin.id %>/settings" class="a-config-form"><fluent-text-area name="config" class="a-code-field" rows="16" appearance="outline"><%= configJson %></fluent-text-area><fluent-button type="submit" appearance="primary">保存配置</fluent-button></form></section>

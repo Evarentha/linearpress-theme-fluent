@@ -1,0 +1,96 @@
+<!--
+  Author: MoyuZJ
+  Team: LinearTeam
+  Contact: linearteam@foxmail.com
+  Made by MoyuZJ in China with ♥
+  Fluent UI 主题 —— 主题外观设置页（新增路由 /admin/fluentui-theme/settings）
+-->
+
+<div class="a-page-head"><div><h1 class="a-title">主题外观</h1><p class="a-eyebrow">Fluent UI 主题 · 首页排版与品牌色</p></div></div><% if (notice === 'saved') { %><fluent-message-bar intent="success"><div>配置已保存，刷新前台即可看到新外观。</div></fluent-message-bar><% } %><% if (notice === 'reset') { %><fluent-message-bar intent="info"><div>已恢复默认外观。</div></fluent-message-bar><% } %><form method="post" action="/admin/fluentui-theme/settings" id="ft-form" class="ft-form"><section class="a-panel-card ft-card"><h2 class="a-section-title">首页内容显示</h2><div class="ft-rows"><label class="ft-row"><span class="ft-row-text"><strong>眉题（eyebrow）</strong><small class="a-panel-muted">首页顶部的小号站点名</small></span><fluent-switch data-ft-target="showEyebrow" aria-label="显示眉题"></fluent-switch></label><label class="ft-row"><span class="ft-row-text"><strong>主标题</strong><small class="a-panel-muted">站点标题 siteTitle</small></span><fluent-switch data-ft-target="showSiteTitle" aria-label="显示主标题"></fluent-switch></label><label class="ft-row"><span class="ft-row-text"><strong>副标题</strong><small class="a-panel-muted">站点副标题 siteSubtitle</small></span><fluent-switch data-ft-target="showSiteSubtitle" aria-label="显示副标题"></fluent-switch></label></div></section><section class="a-panel-card ft-card"><h2 class="a-section-title">字号</h2><div class="ft-rows"><div class="ft-row"><span class="ft-row-text"><strong>主标题字号</strong><small class="a-panel-muted">单位 px</small></span><select data-ft-size="heroTitleSize" class="ft-select"><% titleSizeOptions.forEach(size => { %><option value="<%= size %>" <%= config.heroTitleSize === size ? 'selected' : '' %>><%= size %> px</option><% }) %></select></div><div class="ft-row"><span class="ft-row-text"><strong>副标题字号</strong><small class="a-panel-muted">单位 px</small></span><select data-ft-size="heroSubtitleSize" class="ft-select"><% subtitleSizeOptions.forEach(size => { %><option value="<%= size %>" <%= config.heroSubtitleSize === size ? 'selected' : '' %>><%= size %> px</option><% }) %></select></div></div></section><section class="a-panel-card ft-card"><h2 class="a-section-title">品牌色</h2><div class="ft-rows"><div class="ft-row"><span class="ft-row-text"><strong>浅色模式主色</strong><small class="a-panel-muted">按钮、链接、徽标等</small></span><input type="color" id="ft-accent" name="accentColor" value="<%= config.accentColor %>" class="ft-color"></div><div class="ft-row"><span class="ft-row-text"><strong>深色模式主色</strong><small class="a-panel-muted">在深色模式下生效</small></span><input type="color" id="ft-dark" name="darkAccentColor" value="<%= config.darkAccentColor %>" class="ft-color"></div></div></section><section class="a-panel-card ft-card"><h2 class="a-section-title">实时预览</h2><div class="ft-preview" id="ft-preview"><p class="ft-pv-eyebrow">预览眉题</p><h2 class="ft-pv-title">写下值得留下的内容。</h2><p class="ft-pv-subtitle">预览副标题：站点简介会显示在这里。</p><div class="ft-pv-chips"><fluent-badge appearance="filled" color="brand">品牌色</fluent-badge><fluent-badge appearance="outline">说明文字</fluent-badge><fluent-button appearance="primary" size="small">预览按钮</fluent-button></div></div></section><div class="ft-actions"><fluent-button type="submit" appearance="primary">保存配置</fluent-button><fluent-button type="button" appearance="outline" id="ft-reset">恢复默认</fluent-button></div><input type="hidden" name="showEyebrow" id="ft-h-showEyebrow"><input type="hidden" name="showSiteTitle" id="ft-h-showSiteTitle"><input type="hidden" name="showSiteSubtitle" id="ft-h-showSiteSubtitle"><input type="hidden" name="heroTitleSize" id="ft-h-heroTitleSize"><input type="hidden" name="heroSubtitleSize" id="ft-h-heroSubtitleSize"></form><form method="post" action="/admin/fluentui-theme/settings/reset" id="ft-reset-form"></form><script>
+(function () {
+  'use strict';
+  var form = document.getElementById('ft-form');
+  if (!form) return;
+  var config = <%- JSON.stringify(config) %>;
+  var defaults = <%- JSON.stringify(defaults) %>;
+  var resolver = {
+    showEyebrow: form.querySelector('[data-ft-target="showEyebrow"]'),
+    showSiteTitle: form.querySelector('[data-ft-target="showSiteTitle"]'),
+    showSiteSubtitle: form.querySelector('[data-ft-target="showSiteSubtitle"]')
+  };
+  var sizes = {
+    heroTitleSize: form.querySelector('[data-ft-size="heroTitleSize"]'),
+    heroSubtitleSize: form.querySelector('[data-ft-size="heroSubtitleSize"]')
+  };
+  var accent = document.getElementById('ft-accent');
+  var darkAccent = document.getElementById('ft-dark');
+  var preview = document.getElementById('ft-preview');
+  var hidden = {
+    showEyebrow: document.getElementById('ft-h-showEyebrow'),
+    showSiteTitle: document.getElementById('ft-h-showSiteTitle'),
+    showSiteSubtitle: document.getElementById('ft-h-showSiteSubtitle'),
+    heroTitleSize: document.getElementById('ft-h-heroTitleSize'),
+    heroSubtitleSize: document.getElementById('ft-h-heroSubtitleSize')
+  };
+
+  function isHex(value) { return /^#[0-9a-f]{6}$/i.test(String(value).trim()); }
+  function hex(value, fallback) { var v = String(value).trim().toLowerCase(); return isHex(v) ? v : (isHex(fallback) ? String(fallback).toLowerCase() : '#0f6cbd'); }
+  function mix(base, target, percent) { return 'color-mix(in srgb, ' + hex(base, '#0f6cbd') + ' ' + percent + '%, ' + target + ')'; }
+
+  function applyPreview() {
+    var lightness = hex(accent.value, defaults.accentColor);
+    var isDark = document.documentElement.dataset.theme === 'dark';
+    var base = isDark ? hex(darkAccent.value, defaults.darkAccentColor) : lightness;
+    var vars = {
+      '--pv-background': base,
+      '--pv-hover': mix(base, isDark ? 'white' : 'black', isDark ? 88 : 88),
+      '--pv-pressed': mix(base, isDark ? 'black' : 'black', isDark ? 85 : 74),
+      '--pv-foreground': base,
+      '--pv-link': mix(base, 'black', isDark ? 85 : 80),
+      '--pv-stroke2': mix(base, base === lightness ? 'white' : 'white', 62),
+      '--colorBrandBackground': base,
+      '--colorBrandBackgroundHover': mix(base, isDark ? 'white' : 'black', isDark ? 88 : 88),
+      '--colorBrandBackgroundPressed': mix(base, isDark ? 'black' : 'black', isDark ? 85 : 74),
+      '--colorBrandBackgroundSelected': mix(base, isDark ? 'white' : 'black', isDark ? 88 : 88),
+      '--colorBrandForeground1': base,
+      '--colorBrandForeground2': mix(base, 'black', isDark ? 85 : 80),
+      '--colorBrandForegroundLink': mix(base, 'black', isDark ? 85 : 80),
+      '--colorCompoundBrandForeground1': base,
+      '--colorBrandStroke1': mix(base, 'black', isDark ? 88 : 88)
+    };
+    Object.keys(vars).forEach(function (key) { preview.style.setProperty(key, vars[key]); });
+    preview.style.setProperty('--pv-title-size', String(sizes.heroTitleSize.value || '') + 'px');
+    preview.style.setProperty('--pv-subtitle-size', String(sizes.heroSubtitleSize.value || '') + 'px');
+    preview.querySelector('.ft-pv-eyebrow').style.display = resolver.showEyebrow.checked ? '' : 'none';
+    preview.querySelector('.ft-pv-title').style.display = resolver.showSiteTitle.checked ? '' : 'none';
+    preview.querySelector('.ft-pv-subtitle').style.display = resolver.showSiteSubtitle.checked ? '' : 'none';
+  }
+
+  function syncHidden() {
+    hidden.showEyebrow.value = resolver.showEyebrow.checked ? 'on' : 'off';
+    hidden.showSiteTitle.value = resolver.showSiteTitle.checked ? 'on' : 'off';
+    hidden.showSiteSubtitle.value = resolver.showSiteSubtitle.checked ? 'on' : 'off';
+    hidden.heroTitleSize.value = sizes.heroTitleSize.value || '';
+    hidden.heroSubtitleSize.value = sizes.heroSubtitleSize.value || '';
+  }
+
+  // 初始化控件状态：开关与原生 select 的初始值由服务端渲染决定
+  resolver.showEyebrow.checked = !!config.showEyebrow;
+  resolver.showSiteTitle.checked = !!config.showSiteTitle;
+  resolver.showSiteSubtitle.checked = !!config.showSiteSubtitle;
+
+  form.addEventListener('change', function () { syncHidden(); applyPreview(); });
+  accent.addEventListener('input', applyPreview);
+  darkAccent.addEventListener('input', applyPreview);
+  window.addEventListener('storage', function (event) { if (event.key === 'fluent-theme') applyPreview(); });
+  syncHidden();
+  applyPreview();
+
+  document.getElementById('ft-reset').addEventListener('click', function () {
+    if (!window.confirm('恢复默认外观？当前配置将被覆盖。')) return;
+    fetch('/admin/fluentui-theme/settings/reset', { method: 'POST' })
+      .catch(function () { return null; })
+      .then(function () { location.href = '/admin/fluentui-theme/settings?notice=reset'; });
+  });
+})();
+</script>
