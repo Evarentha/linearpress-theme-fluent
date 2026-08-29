@@ -1,9 +1,28 @@
 {
-  "name": "fluentui-theme",
+  "name": "@evarentha/linearpress-theme-fluent",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
+  "description": "基于 Fluent 2 设计语言的完整主题：前台与后台全 Fluent 化，内置深色模式；Fluent Web Components 全量打包进包内，完全离线可用。",
   "type": "module",
-  "description": "LinearPress Fluent UI 主题插件（开发仓库）",
+  "main": "index.ts",
+  "files": [
+    "index.ts",
+    "plugin.json",
+    "src",
+    "views",
+    "public",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "linearpress",
+    "plugin",
+    "fluentui-theme"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "vendor": "node scripts/vendor.mjs",
     "tokens": "node scripts/generate-tokens.mjs"
