@@ -1,11 +1,36 @@
 {
-  "name": "fluentui-theme",
-  "version": "1.0.0",
-  "private": true,
+  "name": "@evarentha/linearpress-theme-fluent",
+  "version": "3.0.0",
+  "license": "GPL-3.0-or-later",
   "type": "module",
-  "description": "LinearPress Fluent UI 主题插件（开发仓库）",
+  "description": "基于 Fluent 2 设计语言的完整主题：前台与后台全 Fluent 化，内置深色模式；Fluent Web Components 全量打包进包内，完全离线可用。",
   "scripts": {
     "vendor": "node scripts/vendor.mjs",
     "tokens": "node scripts/generate-tokens.mjs"
+  },
+  "main": "index.ts",
+  "author": "MoyuZJ <moyuzj@moyuzj.cn> (https://moyuzj.cn)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Evarentha/linearpress-theme-fluent.git"
+  },
+  "keywords": [
+    "linearpress",
+    "plugin",
+    "evarentha",
+    "theme-fluent"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "peerDependencies": {
+    "linearpress": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/Evarentha/linearpress-theme-fluent#readme",
+  "bugs": {
+    "url": "https://github.com/Evarentha/linearpress-theme-fluent/issues"
   }
 }

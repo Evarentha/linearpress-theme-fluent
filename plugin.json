@@ -1,7 +1,7 @@
 {
   "id": "fluentui-theme",
   "name": "Fluent UI 主题",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "基于 Fluent 2 设计语言的完整主题：前台与后台全 Fluent 化，内置深色模式；Fluent Web Components 全量打包进包内，完全离线可用。",
   "author": "LinearPress",
   "icon": "🎨",
