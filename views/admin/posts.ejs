@@ -1,9 +1,20 @@
 <!--
-  Author: MoyuZJ
-  Team: LinearTeam
-  Contact: linearteam@foxmail.com
-  Made by MoyuZJ in China with ♥
-  Fluent UI 主题 —— 文章管理（覆盖核心 admin/posts）
+  Fluent Post Management Page
+
+  Admin post management page that overrides the core admin/posts view.
+
+  Authors:
+  MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<!--
+  Admin post management page for the Fluent UI theme, overriding the core
+  admin/posts view. Lists all posts with status badges, author, and
+  edit/delete actions, plus a shortcut to create a new post.
+  @since 1.0.0
 -->
 
 <div class="a-page-head"><div><h1 class="a-title">文章</h1><p class="a-eyebrow"><<%= posts.length %> 篇文章</p></div><a href="/admin/posts/new"><fluent-button appearance="primary">+ 新建</fluent-button></a></div><div class="a-table-wrap"><table class="a-table"><thead><tr><th>标题</th><th>状态</th><th>作者</th><th class="a-th-actions">操作</th></tr></thead><tbody><% posts.forEach(post => { %><tr><td class="a-cell-title"><a href="/admin/posts/<%= post.id %>/edit"><%= post.title %></a></td><td><fluent-badge appearance="<%= post.status === 'published' ? 'filled' : 'outline' %>" color="<%= post.status === 'published' ? 'brand' : 'neutral' %>"><%= post.status %></fluent-badge></td><td class="a-cell-muted"><%= post.author_name %></td><td class="a-cell-actions"><a href="/admin/posts/<%= post.id %>/edit"><fluent-button appearance="outline" size="small">编辑</fluent-button></a><form class="a-inline-form" method="post" action="/admin/posts/<%= post.id %>/delete" onsubmit="return confirm('删除后不可恢复，继续吗？')"><fluent-button type="submit" appearance="outline" size="small">删除</fluent-button></form></td></tr><% }) %></tbody></table></div>

@@ -1,9 +1,21 @@
 <!--
-  Author: MoyuZJ
-  Team: LinearTeam
-  Contact: linearteam@foxmail.com
-  Made by MoyuZJ in China with ♥
-  Fluent UI 主题 —— 主题外观设置页（新增路由 /admin/fluentui-theme/settings）
+  Fluent Theme Appearance Settings Page
+
+  Theme appearance settings page at the plugin's own admin route.
+
+  Authors:
+  MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<!--
+  Theme appearance settings page added by the Fluent UI theme at its own
+  /admin/fluentui-theme/settings route. Toggles homepage eyebrow, main title
+  and subtitle visibility, picks hero font sizes and light/dark brand colors
+  with a live preview, and submits or resets the config.
+  @since 1.0.0
 -->
 
 <div class="a-page-head"><div><h1 class="a-title">主题外观</h1><p class="a-eyebrow">Fluent UI 主题 · 首页排版与品牌色</p></div></div><% if (notice === 'saved') { %><fluent-message-bar intent="success"><div>配置已保存，刷新前台即可看到新外观。</div></fluent-message-bar><% } %><% if (notice === 'reset') { %><fluent-message-bar intent="info"><div>已恢复默认外观。</div></fluent-message-bar><% } %><form method="post" action="/admin/fluentui-theme/settings" id="ft-form" class="ft-form"><section class="a-panel-card ft-card"><h2 class="a-section-title">首页内容显示</h2><div class="ft-rows"><label class="ft-row"><span class="ft-row-text"><strong>眉题（eyebrow）</strong><small class="a-panel-muted">首页顶部的小号站点名</small></span><fluent-switch data-ft-target="showEyebrow" aria-label="显示眉题"></fluent-switch></label><label class="ft-row"><span class="ft-row-text"><strong>主标题</strong><small class="a-panel-muted">站点标题 siteTitle</small></span><fluent-switch data-ft-target="showSiteTitle" aria-label="显示主标题"></fluent-switch></label><label class="ft-row"><span class="ft-row-text"><strong>副标题</strong><small class="a-panel-muted">站点副标题 siteSubtitle</small></span><fluent-switch data-ft-target="showSiteSubtitle" aria-label="显示副标题"></fluent-switch></label></div></section><section class="a-panel-card ft-card"><h2 class="a-section-title">字号</h2><div class="ft-rows"><div class="ft-row"><span class="ft-row-text"><strong>主标题字号</strong><small class="a-panel-muted">单位 px</small></span><select data-ft-size="heroTitleSize" class="ft-select"><% titleSizeOptions.forEach(size => { %><option value="<%= size %>" <%= config.heroTitleSize === size ? 'selected' : '' %>><%= size %> px</option><% }) %></select></div><div class="ft-row"><span class="ft-row-text"><strong>副标题字号</strong><small class="a-panel-muted">单位 px</small></span><select data-ft-size="heroSubtitleSize" class="ft-select"><% subtitleSizeOptions.forEach(size => { %><option value="<%= size %>" <%= config.heroSubtitleSize === size ? 'selected' : '' %>><%= size %> px</option><% }) %></select></div></div></section><section class="a-panel-card ft-card"><h2 class="a-section-title">品牌色</h2><div class="ft-rows"><div class="ft-row"><span class="ft-row-text"><strong>浅色模式主色</strong><small class="a-panel-muted">按钮、链接、徽标等</small></span><input type="color" id="ft-accent" name="accentColor" value="<%= config.accentColor %>" class="ft-color"></div><div class="ft-row"><span class="ft-row-text"><strong>深色模式主色</strong><small class="a-panel-muted">在深色模式下生效</small></span><input type="color" id="ft-dark" name="darkAccentColor" value="<%= config.darkAccentColor %>" class="ft-color"></div></div></section><section class="a-panel-card ft-card"><h2 class="a-section-title">实时预览</h2><div class="ft-preview" id="ft-preview"><p class="ft-pv-eyebrow">预览眉题</p><h2 class="ft-pv-title">写下值得留下的内容。</h2><p class="ft-pv-subtitle">预览副标题：站点简介会显示在这里。</p><div class="ft-pv-chips"><fluent-badge appearance="filled" color="brand">品牌色</fluent-badge><fluent-badge appearance="outline">说明文字</fluent-badge><fluent-button appearance="primary" size="small">预览按钮</fluent-button></div></div></section><div class="ft-actions"><fluent-button type="submit" appearance="primary">保存配置</fluent-button><fluent-button type="button" appearance="outline" id="ft-reset">恢复默认</fluent-button></div><input type="hidden" name="showEyebrow" id="ft-h-showEyebrow"><input type="hidden" name="showSiteTitle" id="ft-h-showSiteTitle"><input type="hidden" name="showSiteSubtitle" id="ft-h-showSiteSubtitle"><input type="hidden" name="heroTitleSize" id="ft-h-heroTitleSize"><input type="hidden" name="heroSubtitleSize" id="ft-h-heroSubtitleSize"></form><form method="post" action="/admin/fluentui-theme/settings/reset" id="ft-reset-form"></form><script>
@@ -11,8 +23,8 @@
   'use strict';
   var form = document.getElementById('ft-form');
   if (!form) return;
-  var config = <%- JSON.stringify(config) %>;
-  var defaults = <%- JSON.stringify(defaults) %>;
+  var config = <%- JSON.stringify(config).replace(/</g, '\\u003c') %>;
+  var defaults = <%- JSON.stringify(defaults).replace(/</g, '\\u003c') %>;
   var resolver = {
     showEyebrow: form.querySelector('[data-ft-target="showEyebrow"]'),
     showSiteTitle: form.querySelector('[data-ft-target="showSiteTitle"]'),

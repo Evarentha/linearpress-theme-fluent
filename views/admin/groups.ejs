@@ -1,9 +1,20 @@
 <!--
-  Author: MoyuZJ
-  Team: LinearTeam
-  Contact: linearteam@foxmail.com
-  Made by MoyuZJ in China with ♥
-  Fluent UI 主题 —— 权限组（覆盖核心 admin/groups）
+  Fluent Permission Groups Page
+
+  Admin permission groups page that overrides the core admin/groups view.
+
+  Authors:
+  MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<!--
+  Admin permission groups page for the Fluent UI theme, overriding the core
+  admin/groups view. Lists each group with its permission checkboxes, allows
+  renaming and deleting custom groups, and provides a create-group form.
+  @since 1.0.0
 -->
 
 <div class="a-page-head"><div><h1 class="a-title">权限组</h1><p class="a-eyebrow">按组分配站点权限</p></div></div><section class="a-group-grid"><% groups.forEach(group => { %><article class="a-panel-card a-group-card"><div class="a-group-heading"><div><p class="a-eyebrow"><%= group.is_system ? '系统权限组' : '自定义权限组' %></p><h2 class="a-group-name"><%= group.name %></h2></div><% if (!group.is_system) { %><form method="post" action="/admin/groups/<%= group.id %>/delete" onsubmit="return confirm('删除后该组用户会转入 subscriber，继续吗？')"><fluent-button type="submit" appearance="outline" size="small">删除</fluent-button></form><% } %></div><form method="post" action="/admin/groups/save" class="a-group-form"><input type="hidden" name="id" value="<%= group.id %>"><fluent-text-input name="name" value="<%= group.name %>" <%= group.is_system ? 'disabled' : '' %> appearance="outline" class="a-group-name-input"></fluent-text-input><div class="a-permission-grid"><% permissions.forEach(permission => { %><label class="a-check-row"><fluent-checkbox name="permissions" value="<%= permission %>" <%= group.permissions.includes(permission) || group.permissions.includes('*') ? 'checked' : '' %> <%= group.is_system ? 'disabled' : '' %>><span><%= permission %></span></fluent-checkbox></label><% }) %></div><% if (!group.is_system) { %><fluent-button type="submit" appearance="primary">保存权限</fluent-button><% } %></form></article><% }) %><article class="a-panel-card a-group-card a-group-new"><div class="a-group-heading"><div><p class="a-eyebrow">新权限组</p><h2 class="a-group-name">创建权限组</h2></div></div><form method="post" action="/admin/groups/save" class="a-group-form"><fluent-text-input name="name" placeholder="例如 reviewer" required appearance="outline"></fluent-text-input><div class="a-permission-grid"><% permissions.forEach(permission => { %><label class="a-check-row"><fluent-checkbox name="permissions" value="<%= permission %>"><span><%= permission %></span></fluent-checkbox></label><% }) %></div><fluent-button type="submit" appearance="primary">创建权限组</fluent-button></form></article></section>

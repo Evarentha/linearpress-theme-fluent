@@ -1,19 +1,30 @@
 /*
- * Author: MoyuZJ
- * Team: LinearTeam
- * Contact: linearteam@foxmail.com
- * Made by MoyuZJ in China with ♥
+ * Fluent 2 Design Token Sheet
+ *
+ * Hand-maintained curated Fluent 2 design tokens, light and dark.
+ *
+ * Authors:
+ * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ *
+ * Copyright (C) 2026 Evarentha
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/*
- * fluent-tokens.css —— Fluent 2 设计令牌（手工维护的精选集，浅色 + 深色）。
- *
- * 依据 @fluentui/tokens 的 webLightTheme / webDarkTheme（品牌色分别是 #0f6cbd / #479ef5），
- * 覆盖本主题用到与 Fluent Web Components 内部引用的全部 CSS 变量。
- * 组件样式读取形如 var(--colorNeutralForeground1) 的变量，因此：
- *   :root                     —— 浅色（默认）
- *   :root[data-theme="dark"]  —— 深色（由首屏内联脚本 + fluent-init.js 设置）
- * 所有变量在自定义属性层定义，SSR 首屏即可解析，零闪烁、零 JS 依赖。
+/**
+ * Fluent 2 design tokens: a hand-maintained curated set covering light and
+ * dark themes.
+ * <p>Based on the @fluentui/tokens webLightTheme / webDarkTheme (brand colors
+ * #0f6cbd / #479ef5), it covers every CSS variable used by this theme and
+ * referenced internally by Fluent Web Components. Component styles read
+ * variables like var(--colorNeutralForeground1), so:</p>
+ * <ul>
+ * <li>:root — light (default)</li>
+ * <li>:root[data-theme="dark"] — dark (set by the inline first-paint script
+ * plus fluent-init.js)</li>
+ * </ul>
+ * <p>All variables are defined at the custom-property layer and resolve at SSR
+ * first paint: zero flicker, zero JS dependency.</p>
+ * @since 1.0.0
  */
 
 :root {

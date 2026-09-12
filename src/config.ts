@@ -1,16 +1,24 @@
 /*
- * Author: MoyuZJ
- * Team: LinearTeam
- * Contact: linearteam@foxmail.com
- * Made by MoyuZJ in China with ♥
+ * Fluent Theme Appearance Configuration
+ *
+ * Schema, defaults, form parsing, and CSS generation for theme appearance.
+ *
+ * Authors:
+ * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ *
+ * Copyright (C) 2026 Evarentha
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/*
- * config.ts —— 主题外观配置：Schema、默认值、表单解析与 CSS 生成。
- *
- * 配置存于插件配置（ctx.plugins.getConfig/setConfig('fluentui-theme')），
- * 后台「主题外观」页可视化编辑；site:locals 每请求读取后注入样式覆盖。
- * 所有颜色与尺寸均做清洗，防止任意 CSS 注入。
+/**
+ * Theme appearance configuration: schema, defaults, form parsing, and CSS
+ * generation.
+ * <p>The config lives in the plugin config store
+ * (ctx.plugins.getConfig/setConfig('fluentui-theme')) and is edited visually
+ * on the admin "Theme Appearance" page; site:locals reads it on each request
+ * and injects the style overrides. All colors and sizes are sanitized to
+ * prevent arbitrary CSS injection.</p>
+ * @since 1.0.0
  */
 
 export interface FluentThemeConfig {

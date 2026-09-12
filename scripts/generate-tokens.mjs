@@ -1,21 +1,30 @@
 #!/usr/bin/env node
 /*
- * Author: MoyuZJ
- * Team: LinearTeam
- * Contact: linearteam@foxmail.com
- * Made by MoyuZJ in China with ♥
+ * Fluent Official Token Generator
+ *
+ * Generates the full token CSS from official @fluentui/tokens (optional
+ * upgrade path).
+ *
+ * Authors:
+ * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ *
+ * Copyright (C) 2026 Evarentha
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/*
- * generate-tokens.mjs —— 从官方 @fluentui/tokens 生成完整令牌 CSS（可选，升级路径）。
- *
- * 用法：
- *   npm i @fluentui/tokens@1.0.0-alpha.24
- *   node scripts/generate-tokens.mjs   # 输出 public/fluent-tokens-official.css
- *
- * 说明：仓库内置的 public/fluent-tokens.css 是手工维护的精选令牌（浅/深两套），
- *       已经覆盖主题用到的全部组件变量。若想对齐官方 alpha 最新值，
- *       运行本脚本后用输出的文件替换（注意随后自测一遍所有页面）。
+/**
+ * Generates the complete token CSS from the official @fluentui/tokens package
+ * (an optional upgrade path).
+ * <p>Usage:</p>
+ * <ul>
+ * <li>npm i @fluentui/tokens@1.0.0-alpha.24</li>
+ * <li>node scripts/generate-tokens.mjs (writes public/fluent-tokens-official.css)</li>
+ * </ul>
+ * <p>The bundled public/fluent-tokens.css is a hand-maintained curated set
+ * (light/dark) that already covers every component variable the theme uses.
+ * To align with the latest official alpha values, run this script and replace
+ * the bundled file with its output (then re-test all pages afterwards).</p>
+ * @since 1.0.0
  */
 
 import { writeFile } from 'node:fs/promises';

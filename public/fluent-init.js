@@ -1,21 +1,31 @@
 /*
- * Author: MoyuZJ
- * Team: LinearTeam
- * Contact: linearteam@foxmail.com
- * Made by MoyuZJ in China with ♥
+ * Fluent Theme Runtime Initializer
+ *
+ * Shared Fluent initialization module (ESM) for the site and admin shells.
+ *
+ * Authors:
+ * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ *
+ * Copyright (C) 2026 Evarentha
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/*
- * fluent-init.js —— 前台/后台共用的 Fluent 初始化模块（ESM）。
- *
- * 职责：
- *  1. 守卫注册用到的 Fluent Web Components（bundle 不会自动 define）。
- *  2. 深色模式：同步 header 的 fluent-switch 状态、响应 storage 事件。
- *  3. 后台：移动端抽屉（burger/overlay/Escape/路由点击收起）。
- *  4. 前台评论表单提交时禁用按钮防重复。
- *
- * 由覆盖后的 layouts/web.ejs 与 layouts/admin.ejs 以 <script type="module"> 引入；
- * 必须在 vendor bundle 之后加载。
+/**
+ * Fluent initialization module (ESM) shared by the front end and back end.
+ * <p>Responsibilities:</p>
+ * <ul>
+ * <li>Guard-registers the Fluent Web Components in use (the bundle does not
+ * define them on its own).</li>
+ * <li>Dark mode: syncs the header fluent-switch state and reacts to storage
+ * events.</li>
+ * <li>Admin: the mobile drawer (burger/overlay/Escape/route-click
+ * collapse).</li>
+ * <li>Site: disables the comment form submit button while posting to prevent
+ * duplicate submissions.</li>
+ * </ul>
+ * <p>Loaded as a module by the overridden layouts/web.ejs and
+ * layouts/admin.ejs; must load after the vendor bundle.</p>
+ * @since 1.0.0
  */
 
 import {

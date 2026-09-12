@@ -1,9 +1,21 @@
 <!--
-  Author: MoyuZJ
-  Team: LinearTeam
-  Contact: linearteam@foxmail.com
-  Made by MoyuZJ in China with ♥
-  Fluent UI 主题 —— 前台布局（覆盖核心 layouts/web）
+  Fluent Web Layout Shell
+
+  Front-end HTML layout that overrides the core layouts/web view.
+
+  Authors:
+  MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<!--
+  Front-end layout shell for the Fluent UI theme, overriding the core
+  layouts/web view. Emits the site document skeleton: header with nav and
+  dark-mode switch, main region, and footer, plus the token and theme
+  stylesheets, the Fluent Web Components bundle, and fluent-init.js.
+  @since 1.0.0
 -->
 
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><%= title %> · <%= siteConfig.siteName || siteConfig.title || 'LinearPress' %></title><meta name="description" content="<%= siteConfig.siteDescription || siteConfig.description %>"><% if (siteConfig.customCss) { %><style><%- siteConfig.customCss %></style><% } %><% if (currentPath === '/oobe') { %><link rel="stylesheet" href="/css/style.css"><% } %><% for (const css of pluginStyleUrls) { %><link rel="stylesheet" href="<%= css %>"><% } %><% if (typeof fluentThemeCss === 'string' && fluentThemeCss) { %><style><%- fluentThemeCss %></style><% } %><script>(function(){try{var t=localStorage.getItem('fluent-theme');if(!t)t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='light';}})();</script><script type="module" src="/plugins/fluentui-theme/vendor/web-components-all.min.js"></script><script type="module" src="/plugins/fluentui-theme/fluent-init.js"></script></head><body class="fluent-site"><header class="f-header"><div class="f-header-inner"><a class="f-brand" href="/"><%= siteConfig.siteName || 'LINEARPRESS' %></a><nav class="f-nav"><a class="f-nav-link<%= currentPath === '/' ? ' active' : '' %>" href="/">首页</a><a class="f-nav-link<%= currentPath === '/archive' ? ' active' : '' %>" href="/archive">归档</a><% if (currentUser) { %><a class="f-nav-link" href="/admin">后台</a><form action="/logout" method="post" class="f-logout"><fluent-button type="submit" appearance="subtle">退出</fluent-button></form><% } else { %><a class="f-nav-link" href="/login">登录</a><a class="f-nav-link" href="/register">注册</a><% } %><label class="f-theme-toggle" title="切换深色模式"><span class="f-theme-toggle-label">深色</span><fluent-switch data-fluent-theme-toggle aria-label="切换深色模式"></fluent-switch></label></nav></div></header><main class="f-main"><div class="f-container"><%- body %></div></main><footer class="f-footer"><div class="f-container"><% if (siteConfig.footerCopyright !== 'none') { %><p class="f-footer-copy"><%= siteConfig.footerCopyright === 'running-on' ? ('本站正在运行基于 CordisJS 的 LinearPress 版本 ' + LINEARPRESS_VERSION + '。') : ('由 LinearPress 强力驱动，基于 CordisJS。正在运行的版本为：' + LINEARPRESS_VERSION + '。') %></p><% } %><% if (siteConfig.icpNumber) { %><p class="f-footer-icp"><%= siteConfig.icpProvince ? siteConfig.icpProvince : '' %>ICP备<%= siteConfig.icpNumber %>号<% if (siteConfig.policeNumber) { %> | 国公网安备第<%= siteConfig.policeNumber %>号<% } %></p><% } %><% if (siteConfig.footerHtml) { %><div class="f-footer-html"><%- siteConfig.footerHtml %></div><% } %><p class="f-footer-meta">TYPE-SAFE PUBLISHING / <%= new Date().getFullYear() %></p></div></footer><% for (const script of pluginScriptUrls) { %><script src="<%= script %>"></script><% } %></body></html>

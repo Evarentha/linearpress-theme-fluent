@@ -1,9 +1,20 @@
 <!--
-  Author: MoyuZJ
-  Team: LinearTeam
-  Contact: linearteam@foxmail.com
-  Made by MoyuZJ in China with ♥
-  Fluent UI 主题 —— 控制台（覆盖核心 admin/dashboard）
+  Fluent Admin Dashboard Page
+
+  Admin dashboard page that overrides the core admin/dashboard view.
+
+  Authors:
+  MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<!--
+  Admin dashboard (console) page for the Fluent UI theme, overriding the core
+  admin/dashboard view. Shows stat cards for posts, comments, the pending
+  moderation queue, and users.
+  @since 1.0.0
 -->
 
 <div class="a-page-head"><div><p class="a-eyebrow">LINEARPRESS / ADMIN</p><h1 class="a-title">控制台</h1></div></div><div class="a-stats"><div class="a-stat"><b class="a-stat-value"><%= counts.posts %></b><span class="a-stat-label">文章</span></div><div class="a-stat"><b class="a-stat-value"><%= counts.comments %></b><span class="a-stat-label">评论</span></div><div class="a-stat"><b class="a-stat-value"><%= counts.pending %></b><span class="a-stat-label">待审核</span></div><div class="a-stat"><b class="a-stat-value"><%= counts.users %></b><span class="a-stat-label">用户</span></div></div>

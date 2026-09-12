@@ -1,21 +1,31 @@
 /*
- * Author: MoyuZJ
- * Team: LinearTeam
- * Contact: linearteam@foxmail.com
- * Made by MoyuZJ in China with ♥
+ * Fluent UI Theme Plugin Entry Point
+ *
+ * Entry point of the Fluent 2 theme plugin for LinearPress.
+ *
+ * Authors:
+ * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ *
+ * Copyright (C) 2026 Evarentha
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/*
- * fluentui-theme —— LinearPress 的 Fluent 2 主题插件。
- *
- * 职责边界（与 Cordis 生命周期对应）：
- *  1. 视图覆盖：通过 web.viewDir() 在 activate 阶段注册视图目录
- *     （排在 Express views 搜索顺序最前，覆盖核心与其它插件），
- *     plugin.json 刻意不声明 views 字段。
- *  2. 路由：/archive 归档页；/admin/fluentui-theme/settings 主题外观设置页。
- *  3. hooks：site:locals 注入模板辅助（归档分组）与主题外观配置（含 CSS 覆盖）。
- *  4. 静态资源：Fluent Web Components 全量 bundle 在 public/vendor，
- *     由覆盖后的布局以 <script type="module"> 引入（ESM）。
+/**
+ * The Fluent 2 theme plugin for LinearPress.
+ * <p>Responsibilities, aligned with the Cordis lifecycle:</p>
+ * <ul>
+ * <li>View overrides: registers the views directory via web.viewDir() during
+ * activate (placed first in the Express view search order so it overrides the
+ * core and other plugins); plugin.json deliberately declares no views
+ * field.</li>
+ * <li>Routes: the /archive page and the /admin/fluentui-theme/settings theme
+ * appearance settings page.</li>
+ * <li>Hooks: site:locals injects template helpers (archive grouping) and the
+ * theme appearance config (including CSS overrides).</li>
+ * <li>Static assets: the full Fluent Web Components bundle under public/vendor,
+ * loaded as an ES module by the overridden layouts.</li>
+ * </ul>
+ * @since 1.0.0
  */
 
 import type { Context } from 'cordis';

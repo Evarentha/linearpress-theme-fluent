@@ -1,13 +1,20 @@
 /*
- * Author: MoyuZJ
- * Team: LinearTeam
- * Contact: linearteam@foxmail.com
- * Made by MoyuZJ in China with ♥
+ * Fluent Site Theme Stylesheet
+ *
+ * Front-end styles for the Fluent UI theme.
+ *
+ * Authors:
+ * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ *
+ * Copyright (C) 2026 Evarentha
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/*
- * fluentui-theme.css —— Fluent UI 主题前台样式。
- * 全部规则锁定在 body.fluent-site 作用域内，不干扰后台与插件页面。
+/**
+ * Front-end (site) styles for the Fluent UI theme.
+ * <p>Every rule is scoped under body.fluent-site so nothing leaks into the
+ * admin area or plugin pages.</p>
+ * @since 1.0.0
  */
 
 /* ------------------------------------------------------------ 基础 */

@@ -1,9 +1,20 @@
 <!--
-  Author: MoyuZJ
-  Team: LinearTeam
-  Contact: linearteam@foxmail.com
-  Made by MoyuZJ in China with ♥
-  Fluent UI 主题 —— 登录页（覆盖核心 auth/login）
+  Fluent Login Page
+
+  Login page that overrides the core auth/login view.
+
+  Authors:
+  MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<!--
+  Login page for the Fluent UI theme, overriding the core auth/login view.
+  Renders a centered card with username and password fields, an error message
+  bar, and a link to registration.
+  @since 1.0.0
 -->
 
 <section class="f-auth"><div class="f-auth-card"><div class="f-auth-head"><p class="f-eyebrow">ACCOUNT ACCESS</p><h1 class="f-title">登录</h1></div><% if (error) { %><fluent-message-bar intent="error"><div><%= error %></div></fluent-message-bar><% } %><form method="post" action="/login" class="f-auth-form"><fluent-text-input name="username" placeholder="用户名" required appearance="outline"></fluent-text-input><fluent-text-input name="password" type="password" placeholder="密码" required appearance="outline"></fluent-text-input><fluent-button type="submit" appearance="primary">进入后台</fluent-button><button type="submit" hidden aria-hidden="true"></button></form><a class="f-auth-alt" href="/register">创建账号 →</a></div></section>

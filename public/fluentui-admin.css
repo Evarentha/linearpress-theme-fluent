@@ -1,13 +1,21 @@
 /*
- * Author: MoyuZJ
- * Team: LinearTeam
- * Contact: linearteam@foxmail.com
- * Made by MoyuZJ in China with ♥
+ * Fluent Admin Theme Stylesheet
+ *
+ * Back-end styles for the Fluent UI theme.
+ *
+ * Authors:
+ * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ *
+ * Copyright (C) 2026 Evarentha
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/*
- * fluentui-admin.css —— Fluent UI 主题后台样式。
- * 全部规则锁定在 body.fluent-admin 作用域内；末尾包含插件页基础兼容层。
+/**
+ * Back-end (admin) styles for the Fluent UI theme.
+ * <p>Every rule is scoped under body.fluent-admin; the tail of the file holds
+ * a base compatibility layer so third-party plugin pages render properly
+ * inside the theme shell.</p>
+ * @since 1.0.0
  */
 
 /* ------------------------------------------------------------ 顶栏 */
