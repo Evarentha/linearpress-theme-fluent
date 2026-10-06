@@ -2,11 +2,11 @@
 /*
  * Fluent Official Token Generator
  *
- * Generates the full token CSS from official @fluentui/tokens (optional
- * upgrade path).
+ * Generates the full token CSS from official @fluentui/tokens (optional upgrade path).
  *
  * Authors:
  * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ * worryzu <worryzu@gmail.com> @LinearTeam
  *
  * Copyright (C) 2026 Evarentha
  * SPDX-License-Identifier: GPL-3.0-or-later

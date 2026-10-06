@@ -5,6 +5,7 @@
 
   Authors:
   MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+  worryzu <worryzu@gmail.com> @LinearTeam
 
   Copyright (C) 2026 Evarentha
   SPDX-License-Identifier: GPL-3.0-or-later
@@ -19,3 +20,9 @@
 -->
 
 <section class="f-intro f-hero"><% var ft = (typeof fluentTheme === 'object' && fluentTheme) ? fluentTheme : null; %><% if (!ft || ft.showEyebrow !== false) { %><p class="f-eyebrow"><%= siteConfig.siteName || 'INDEPENDENT PUBLISHING SYSTEM' %></p><% } %><% if (!ft || ft.showSiteTitle !== false) { %><h1 class="f-title"><%= siteConfig.siteTitle || '写下值得留下的内容。' %></h1><% } %><% if (!ft || ft.showSiteSubtitle !== false) { %><p class="f-lede"><%= siteConfig.siteSubtitle || 'LinearPress 是一个极简、可扩展、服务端渲染的写作空间。' %></p><% } %></section><section class="f-posts"><% posts.forEach(post => { %><% if (typeof isShuoShuo === 'function' && isShuoShuo(post.slug)) { %><article class="f-card f-card-shuoshuo"><div class="f-card-meta"><fluent-badge appearance="tint">说说</fluent-badge><span class="f-meta-date"><%= formatDate(post.created_at) %></span></div><div class="f-shuoshuo-body"><%- (typeof shuoshuoHtml === 'function') ? shuoshuoHtml(post) : post.title %></div></article><% } else { %><article class="f-card"><div class="f-card-main"><div class="f-card-meta"><span class="f-meta-date"><%= formatDate(post.created_at) %></span><fluent-badge appearance="outline"><%= post.views %> 次浏览</fluent-badge></div><h2 class="f-card-title"><a href="<%= postUrl(post) %>"><%= post.title %></a></h2></div><a class="f-card-link" href="<%= postUrl(post) %>">阅读<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M7.5 1.5 13 8l-5.5 6.5V11H3V5h4.5V1.5Z"/></svg></a></article><% } %><% }) %><% if (!posts.length) { %><p class="f-empty">还没有发布任何文章。</p><% } %></section>
+<% var totalPages = (typeof pages !== 'undefined' && Number.isFinite(Number(pages))) ? Math.max(1, Math.floor(Number(pages))) : 1; var currentPage = (typeof page !== 'undefined' && Number.isFinite(Number(page))) ? Math.min(totalPages, Math.max(1, Math.floor(Number(page)))) : 1; %>
+<% if (totalPages > 1) { %><nav class="f-pagination" aria-label="文章分页">
+  <% if (currentPage > 1) { %><a class="button" rel="prev" href="/?page=<%= currentPage - 1 %>">上一页</a><% } %>
+  <span aria-current="page"><%= currentPage %> / <%= totalPages %></span>
+  <% if (currentPage < totalPages) { %><a class="button" rel="next" href="/?page=<%= currentPage + 1 %>">下一页</a><% } %>
+</nav><% } %>

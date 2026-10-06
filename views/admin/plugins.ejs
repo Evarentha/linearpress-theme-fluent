@@ -5,6 +5,7 @@
 
   Authors:
   MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+  worryzu <worryzu@gmail.com> @LinearTeam
 
   Copyright (C) 2026 Evarentha
   SPDX-License-Identifier: GPL-3.0-or-later
@@ -12,10 +13,30 @@
 
 <!--
   Admin plugin management page for the Fluent UI theme, overriding the core
-  admin/plugins view. Offers npm and ZIP install forms plus a
+  admin/plugins view. Offers npm and LPP/ZIP install forms plus a
   drag-reorderable plugin list. The element IDs and class names required by
   the core drag and install scripts are preserved.
   @since 1.0.0
 -->
 
-<div class="a-page-head"><div><h1 class="a-title">插件</h1><p class="a-eyebrow">拖动条目调整加载顺序</p></div></div><section class="a-panel-card a-install"><h2 class="a-section-title">安装插件</h2><form id="npm-install-form" class="a-install-row"><fluent-text-input id="npm-package-name" placeholder="@scope/plugin-name 或 plugin-name@1.0.0" autocomplete="off" required></fluent-text-input><fluent-button type="submit" appearance="primary">从 npm 安装</fluent-button></form><form id="zip-install-form" class="a-install-row"><label class="a-file-label">选择 ZIP 文件<input type="file" id="zip-file" accept=".zip,application/zip,application/x-zip-compressed" multiple hidden></label><label class="a-batch-toggle"><fluent-checkbox id="zip-batch"><span>批量安装</span></fluent-checkbox></label><fluent-button type="submit" appearance="primary">上传 ZIP 安装</fluent-button></form><p id="install-status" class="a-notice" hidden></p></section><ol class="a-plugin-list" id="plugin-list"><% plugins.forEach(plugin => { %><li draggable="true" data-plugin-id="<%= plugin.id %>" class="a-plugin-row"><span class="a-drag-handle">⋮⋮</span><div class="a-plugin-icon"><% if (plugin.icon) { %><%= plugin.icon %><% } else { %><%= (plugin.name || plugin.id)[0].toUpperCase() %><% } %></div><div class="a-plugin-info"><strong class="a-plugin-name"><%= plugin.name %></strong><small class="a-plugin-meta"><%= plugin.id %> · v<%= plugin.version %><% if (plugin.description) { %> · <%= plugin.description %><% } %></small></div><fluent-badge appearance="<%= plugin.enabled ? 'filled' : 'outline' %>" color="<%= plugin.enabled ? 'brand' : 'neutral' %>"><%= plugin.enabled ? '启用' : '停用' %></fluent-badge><div class="a-plugin-actions"><% customSettingsFor(plugin.id).forEach(entry => { %><a href="<%= entry.link || ('/admin/plugins/' + plugin.id + '/settings') %>"><fluent-button appearance="outline" size="small"><%= entry.label %></fluent-button></a><% }) %><a href="/admin/plugins/<%= plugin.id %>/settings"><fluent-button appearance="outline" size="small">设置</fluent-button></a><form method="post" action="/admin/plugins/<%= plugin.id %>/toggle"><fluent-button type="submit" appearance="outline" size="small"><%= plugin.enabled ? '停用' : '启用' %></fluent-button></form><% if (!builtinPlugins.includes(plugin.id)) { %><form method="post" action="/admin/plugins/<%= plugin.id %>/uninstall" onsubmit="return confirm('删除将移除插件目录及其数据，继续吗？')"><fluent-button type="submit" appearance="outline" size="small" class="a-danger">删除</fluent-button></form><% } %></div></li><% }) %></ol><p id="sort-status" class="a-notice" hidden>顺序已保存。</p><script src="/js/plugin-sort.js" defer></script><script src="/js/plugin-install.js" defer></script>
+<div class="a-page-head"><div><h1 class="a-title">插件</h1><p class="a-eyebrow">拖动条目调整加载顺序</p></div></div><link rel="stylesheet" href="/css/plugin-install.css">
+<section class="a-panel-card a-install">
+  <h2 class="a-section-title">安装插件</h2>
+  <p id="install-help">推荐使用 .lpp 插件包，也兼容 .zip 和 npm。插件是受信任的服务器代码，请只安装可信来源。服务器会自动重启并验证结果；关闭页面不会取消已受理的任务。批量安装将逐个等待验证，失败即停止；刷新后请重新选择尚未上传的文件。</p>
+  <noscript><p class="a-notice">安装需要 JavaScript 以查询服务器重启后的验证结果。请启用 JavaScript；这些表单不会在无脚本时提交安装。</p></noscript>
+  <form id="npm-install-form" class="a-install-row" aria-describedby="install-help">
+    <fluent-text-input id="npm-package-name" aria-label="npm 包名" placeholder="@scope/plugin-name 或 plugin-name@1.0.0" autocomplete="off" required disabled></fluent-text-input>
+    <fluent-button type="submit" appearance="primary" disabled>从 npm 安装</fluent-button>
+  </form>
+  <form id="zip-install-form" class="a-install-row" aria-describedby="install-help">
+    <label class="a-file-label plugin-package-picker">选择 .lpp（推荐）或 .zip 文件<input type="file" id="zip-file" aria-label="选择 .lpp（推荐）或 .zip 插件包" accept=".lpp,.zip,application/vnd.linearpress.plugin+zip,application/zip,application/x-zip-compressed" multiple required disabled></label>
+    <label class="a-batch-toggle"><fluent-checkbox id="zip-batch" disabled><span>批量安装（串行）</span></fluent-checkbox></label>
+    <fluent-button type="submit" appearance="primary" disabled>上传插件包（推荐 .lpp）</fluent-button>
+  </form>
+  <progress id="install-progress" aria-label="插件安装及重启验证进行中" aria-describedby="install-status" hidden></progress>
+  <p id="install-status" class="a-notice" role="status" aria-live="polite" aria-atomic="true" hidden></p>
+  <fluent-button id="install-resume" type="button" appearance="outline" hidden>继续查询（不重新安装）</fluent-button>
+  <a id="install-login" href="/login" target="_blank" rel="noopener" hidden>重新登录（新标签页），然后继续查询</a>
+  <a id="install-result" href="/admin/plugins" hidden>查看插件列表</a>
+  <fluent-button id="install-unlock" type="button" appearance="outline" hidden>已核对服务器记录，解锁安装表单</fluent-button>
+</section><ol class="a-plugin-list" id="plugin-list"><% plugins.forEach(plugin => { %><li draggable="true" data-plugin-id="<%= plugin.id %>" class="a-plugin-row"><span class="a-drag-handle">⋮⋮</span><div class="a-plugin-icon"><% if (plugin.icon) { %><%= plugin.icon %><% } else { %><%= (plugin.name || plugin.id)[0].toUpperCase() %><% } %></div><div class="a-plugin-info"><strong class="a-plugin-name"><%= plugin.name %></strong><small class="a-plugin-meta"><%= plugin.id %> · v<%= plugin.version %><% if (plugin.description) { %> · <%= plugin.description %><% } %></small></div><fluent-badge appearance="<%= plugin.enabled ? 'filled' : 'outline' %>" color="<%= plugin.enabled ? 'brand' : 'neutral' %>"><%= plugin.enabled ? '启用' : '停用' %></fluent-badge><div class="a-plugin-actions"><% customSettingsFor(plugin.id).forEach(entry => { %><a href="<%= entry.link || ('/admin/plugins/' + plugin.id + '/settings') %>"><fluent-button appearance="outline" size="small"><%= entry.label %></fluent-button></a><% }) %><a href="/admin/plugins/<%= plugin.id %>/settings"><fluent-button appearance="outline" size="small">设置</fluent-button></a><form method="post" action="/admin/plugins/<%= plugin.id %>/toggle"><fluent-button type="submit" appearance="outline" size="small"><%= plugin.enabled ? '停用' : '启用' %></fluent-button></form><% if (!builtinPlugins.includes(plugin.id)) { %><form method="post" action="/admin/plugins/<%= plugin.id %>/uninstall" onsubmit="return confirm('删除将移除插件目录及其数据，继续吗？')"><fluent-button type="submit" appearance="outline" size="small" class="a-danger">删除</fluent-button></form><% } %></div></li><% }) %></ol><p id="sort-status" class="a-notice" hidden>顺序已保存。</p><script src="/js/plugin-sort.js" defer></script><script src="/js/plugin-install.js" defer></script>

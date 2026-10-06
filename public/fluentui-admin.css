@@ -5,6 +5,7 @@
  *
  * Authors:
  * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ * worryzu <worryzu@gmail.com> @LinearTeam
  *
  * Copyright (C) 2026 Evarentha
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -163,7 +164,9 @@ body.fluent-admin a:hover { text-decoration: underline; text-underline-offset: 3
 .a-inline-form { display: inline-flex; align-items: center; }
 .a-group-form { display: inline-flex; align-items: center; gap: var(--spacingHorizontalXS); }
 .a-super { margin-left: var(--spacingHorizontalXS); }
-.a-select { min-width: 160px; }
+.a-select { min-width: 160px; max-width: 100%; }
+body.fluent-admin select.a-select { min-height: 32px; width: auto; cursor: pointer; }
+body.fluent-admin select.a-icp-province { min-width: 132px; }
 .a-muted { color: var(--colorNeutralForeground3); font-size: var(--fontSizeBase200); }
 
 /* ------------------------------------------------------------ 权限组 */

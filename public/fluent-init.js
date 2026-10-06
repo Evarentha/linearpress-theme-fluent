@@ -5,6 +5,7 @@
  *
  * Authors:
  * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ * worryzu <worryzu@gmail.com> @LinearTeam
  *
  * Copyright (C) 2026 Evarentha
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -80,6 +81,32 @@ for (const [elementClass, definition] of DEFINITIONS) {
   }
 }
 
+/* ---------------------------------------------------------- 表单初始值 */
+// This vendor's textarea value is a property, not a reflected HTML attribute.
+// Explicitly hydrate the server-escaped initial value after custom-element upgrade;
+// setting the property also updates the shadow textarea and form-associated value.
+document.querySelectorAll('fluent-textarea[value]').forEach((area) => {
+  if (area.hasAttribute('data-fluent-initialized')) return;
+  let edited = false;
+  const onInput = () => { edited = true; };
+  area.addEventListener('input', onInput);
+  // define() schedules registration in this bundle. Assigning before upgrade
+  // creates an own property that FAST subsequently resets to its empty default.
+  customElements.whenDefined('fluent-textarea').then(() => {
+    customElements.upgrade(area);
+    // FAST initializes from its slot in a queued animation frame, overwriting
+    // earlier assignments. Wait for that first render and never overwrite edits.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (!edited && !area.value && !area.hasAttribute('data-fluent-initialized')) {
+        area.defaultValue = area.getAttribute('value') ?? '';
+        area.value = area.defaultValue;
+      }
+      area.setAttribute('data-fluent-initialized', '');
+      area.removeEventListener('input', onInput);
+    }));
+  });
+});
+
 /* ---------------------------------------------------------- 深色模式 */
 const THEME_KEY = 'fluent-theme';
 const root = document.documentElement;
@@ -139,7 +166,7 @@ if (commentForm) {
     const button = commentForm.querySelector('[type="submit"]');
     if (button) button.disabled = true;
   });
-  const area = commentForm.querySelector('fluent-text-area');
+  const area = commentForm.querySelector('fluent-textarea');
   if (area) {
     const control = area;
     const sync = () => {

@@ -5,6 +5,7 @@
 
   Authors:
   MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+  worryzu <worryzu@gmail.com> @LinearTeam
 
   Copyright (C) 2026 Evarentha
   SPDX-License-Identifier: GPL-3.0-or-later
@@ -17,4 +18,4 @@
   @since 1.0.0
 -->
 
-<div class="a-page-head"><div><h1 class="a-title">用户</h1><p class="a-eyebrow"><%= users.length %> 位用户</p></div></div><div class="a-table-wrap"><table class="a-table"><thead><tr><th>用户名</th><th>邮箱</th><th>权限组</th><th class="a-th-actions">操作</th></tr></thead><tbody><% users.forEach(user => { %><tr><td class="a-cell-title"><%= user.username %><% if (user.is_super_admin) { %><fluent-badge appearance="filled" color="brand" class="a-super">超级管理员</fluent-badge><% } %></td><td class="a-cell-muted"><%= user.email || '-' %></td><td class="a-cell-muted"><%= user.group_name %></td><td class="a-cell-actions"><% if (user.is_super_admin) { %><span class="a-muted">唯一超级管理员</span><% } else { %><form class="a-inline-form a-group-form" method="post" action="/admin/users/<%= user.id %>/group"><fluent-dropdown name="group_id" class="a-select"><% groups.filter(group => !group.permissions.includes('*')).forEach(group => { %><fluent-option value="<%= group.id %>" <%= group.id === user.group_id ? 'selected' : '' %>><%= group.name %></fluent-option><% }) %></fluent-dropdown><fluent-button type="submit" appearance="outline" size="small">更新</fluent-button></form><% } %></td></tr><% }) %></tbody></table></div>
+<div class="a-page-head"><div><h1 class="a-title">用户</h1><p class="a-eyebrow"><%= users.length %> 位用户</p></div></div><div class="a-table-wrap"><table class="a-table"><thead><tr><th>用户名</th><th>邮箱</th><th>权限组</th><th class="a-th-actions">操作</th></tr></thead><tbody><% users.forEach(user => { %><tr><td class="a-cell-title"><%= user.username %><% if (user.is_super_admin) { %><fluent-badge appearance="filled" color="brand" class="a-super">超级管理员</fluent-badge><% } %></td><td class="a-cell-muted"><%= user.email || '-' %></td><td class="a-cell-muted"><%= user.group_name %></td><td class="a-cell-actions"><% if (user.is_super_admin) { %><span class="a-muted">唯一超级管理员</span><% } else { %><form class="a-inline-form a-group-form" method="post" action="/admin/users/<%= user.id %>/group"><select name="group_id" class="a-select"><% groups.filter(group => !group.permissions.includes('*')).forEach(group => { %><option value="<%= group.id %>" <%= group.id === user.group_id ? 'selected' : '' %>><%= group.name %></option><% }) %></select><fluent-button type="submit" appearance="outline" size="small">更新</fluent-button></form><% } %></td></tr><% }) %></tbody></table></div>

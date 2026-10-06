@@ -5,6 +5,7 @@
  *
  * Authors:
  * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
+ * worryzu <worryzu@gmail.com> @LinearTeam
  *
  * Copyright (C) 2026 Evarentha
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -199,6 +200,21 @@ body.fluent-site a:hover { text-decoration: underline; text-underline-offset: 3p
 
 /* ------------------------------------------------------------ 评论区 */
 .f-comments { margin-top: var(--spacingVerticalXXL); }
+.f-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--spacingHorizontalL); margin-top: var(--spacingVerticalXL); }
+.f-pagination a { color: var(--colorBrandForeground1); padding: var(--spacingVerticalS) var(--spacingHorizontalM); border: 1px solid var(--colorNeutralStroke1); border-radius: var(--borderRadiusMedium); text-decoration: none; }
+.f-advanced-comments .ac-comments { margin-top: 0; }
+.f-advanced-comments .ac-comment-form { display: flex; flex-direction: column; gap: var(--spacingVerticalM); }
+.f-advanced-comments input, .f-advanced-comments textarea, .f-advanced-comments button { box-sizing: border-box; max-width: 100%; font: inherit; color: var(--colorNeutralForeground1); background: var(--colorNeutralBackground1); border: 1px solid var(--colorNeutralStroke1); border-radius: var(--borderRadiusMedium); padding: var(--spacingVerticalSNudge) var(--spacingHorizontalM); }
+.f-advanced-comments input, .f-advanced-comments textarea { width: 100%; }
+.f-advanced-comments textarea { min-height: 140px; resize: vertical; }
+.f-advanced-comments input:focus, .f-advanced-comments textarea:focus { outline: 2px solid var(--colorBrandStroke1); outline-offset: -2px; }
+.f-advanced-comments button[type="submit"] { align-self: flex-end; color: var(--colorNeutralForegroundOnBrand); background: var(--colorBrandBackground); cursor: pointer; }
+.f-advanced-comments .ac-toolbar { flex-wrap: wrap; gap: var(--spacingHorizontalS); }
+.f-advanced-comments .ac-error { color: var(--colorPaletteRedForeground1); }
+.f-advanced-comments .ec-box { max-width: 100%; }
+body.fluent-site .ac-emoji-panel { box-sizing: border-box; border-radius: var(--borderRadiusMedium); background: var(--colorNeutralBackground1); color: var(--colorNeutralForeground1); box-shadow: var(--shadow16); }
+.f-advanced-comments .ac-toolbar, body.fluent-site .ac-emoji-top { background: var(--colorNeutralBackground2); }
+.f-advanced-comments .ac-comment-form .ac-name, .f-advanced-comments .ac-comment-form .ac-email { width: 100%; float: none; }
 .f-comment { padding: var(--spacingVerticalL) 0; border-bottom: 1px solid var(--colorNeutralStroke3); }
 .f-comment-meta { display: flex; align-items: baseline; gap: var(--spacingHorizontalS); margin-bottom: var(--spacingVerticalXS); }
 .f-comment-meta strong { color: var(--colorNeutralForeground1); font-size: var(--fontSizeBase300); font-weight: var(--fontWeightSemibold); }
