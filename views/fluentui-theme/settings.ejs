@@ -1,0 +1,42 @@
+<%#
+  Fluent theme · brand color settings with a live preview.
+
+  Authors:
+  MoyuZJ <moyuzj@evarentha.com> @LinearTeam - Made in China with ♥
+  worryzu <worryzu@evarentha.com> @LinearTeam
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+%><% const isPreset = presets.some((p) => p.color === config.brand); %><div class="stack" data-lp-plugin="fluentui-theme">
+  <div class="page-header"><div><h1>Fluent 主题</h1><p>品牌色用于主要按钮、链接、选中状态和焦点指示。主题会以它为第 80 级生成 16 级色板，浅色与深色模式各取合适的一级，选择后整个后台会立即预览。</p></div></div>
+  <form class="card stack" method="post" action="/admin/appearance/fluent" data-fluent-brand data-dirty-guard>
+    <fieldset class="stack">
+      <legend class="section-title">品牌色</legend>
+      <div class="fluent-swatches">
+        <% for (const preset of presets) { %>
+        <label class="fluent-swatch"><input type="radio" name="brand" value="<%= preset.color %>"<%= config.brand === preset.color ? ' checked' : '' %>><span class="dot" style="--c:<%= preset.color %>"></span><span class="name"><%= preset.label %><small><%= preset.color %></small></span></label>
+        <% } %>
+        <label class="fluent-swatch"><input type="radio" name="brand" value="custom"<%= isPreset ? '' : ' checked' %>><span class="dot is-custom"><input type="color" name="custom_brand" value="<%= config.brand %>" aria-label="自定义品牌色"></span><span class="name">自定义<small data-fluent-custom-hex><%= isPreset ? '选择任意颜色' : config.brand %></small></span></label>
+      </div>
+    </fieldset>
+    <div class="stack fluent-gap-sm">
+      <h2 class="section-title">色板</h2>
+      <div class="fluent-ramp" data-fluent-ramp><% for (const step of steps) { %><span data-step="<%= step %>" style="background:<%= ramp[step] %>" title="<%= step %> · <%= ramp[step] %>"><small><%= step %></small></span><% } %></div>
+    </div>
+    <div class="stack fluent-gap-sm">
+      <h2 class="section-title">预览</h2>
+      <div class="fluent-preview">
+        <button type="button" class="btn btn-primary">主要按钮</button>
+        <button type="button" class="btn">次要按钮</button>
+        <a href="#preview" data-fluent-noop>文字链接</a>
+        <span class="badge badge-accent">标签</span>
+        <label class="switch"><input type="checkbox" checked><span class="track"></span><span>开关</span></label>
+        <label class="check"><input type="checkbox" checked><span>复选框</span></label>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">保存</button>
+      <button class="btn btn-ghost" type="button" data-fluent-reset="<%= defaultBrand %>">恢复默认</button>
+    </div>
+  </form>
+</div>

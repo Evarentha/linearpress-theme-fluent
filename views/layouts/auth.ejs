@@ -1,0 +1,41 @@
+<%#
+  Fluent theme · sign-in / first-run layout: one card on a soft brand backdrop.
+
+  Authors:
+  MoyuZJ <moyuzj@evarentha.com> @LinearTeam - Made in China with ♥
+  worryzu <worryzu@evarentha.com> @LinearTeam
+
+  Copyright (C) 2026 Evarentha
+  SPDX-License-Identifier: GPL-3.0-or-later
+%><% const initial = (siteConfig.siteName || 'L').trim().slice(0, 1).toUpperCase(); %><!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title><%= typeof pageTitle !== 'undefined' && pageTitle ? pageTitle : '登录' %> · <%= siteConfig.siteName %></title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>(function(){try{var t=localStorage.getItem('lp-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}})()</script>
+<link rel="stylesheet" href="/css/lp-base.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/css/web.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/plugins/fluentui-theme/fluent-icons.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/plugins/fluentui-theme/fluent.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/plugins/fluentui-theme/fluent-web.css?v=<%= assetVersion %>">
+<% for (const href of styleUrls) { %><link rel="stylesheet" href="<%= href %>">
+<% } %><%- slot('head') %>
+</head>
+<body class="lp-auth f-auth">
+<main class="auth-shell" id="main">
+  <div class="auth-card<%= typeof wide !== 'undefined' && wide ? ' is-wide' : '' %>">
+    <a class="site-brand auth-brand f-brand" href="/"><span class="f-logo" aria-hidden="true"><%= initial %></span><span><%= siteConfig.siteName %></span></a>
+    <%- include('partials/alerts') %>
+    <%- body %>
+  </div>
+</main>
+<script src="/js/lp.js?v=<%= assetVersion %>" defer></script>
+<script src="/plugins/fluentui-theme/fluent.js?v=<%= assetVersion %>" defer></script>
+<% for (const script of scripts) { %><script src="<%= script.src %>"<%- script.module ? ' type="module"' : ' defer' %>></script>
+<% } %><%- slot('body.end') %>
+</body>
+</html>

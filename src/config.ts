@@ -1,188 +1,103 @@
 /*
- * Fluent Theme Appearance Configuration
+ * Fluent Theme Configuration
  *
- * Schema, defaults, form parsing, and CSS generation for theme appearance.
+ * The brand color setting and the 16-step Fluent brand ramp generated from it.
  *
  * Authors:
- * MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
- * worryzu <worryzu@gmail.com> @LinearTeam
+ * MoyuZJ <moyuzj@evarentha.com> @LinearTeam - Made in China with ♥
+ * worryzu <worryzu@evarentha.com> @LinearTeam
  *
  * Copyright (C) 2026 Evarentha
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 /**
- * Theme appearance configuration: schema, defaults, form parsing, and CSS
- * generation.
- * <p>The config lives in the plugin config store
- * (ctx.plugins.getConfig/setConfig('fluentui-theme')) and is edited visually
- * on the admin "Theme Appearance" page; site:locals reads it on each request
- * and injects the style overrides. All colors and sizes are sanitized to
- * prevent arbitrary CSS injection.</p>
- * @since 1.0.0
+ * <p>Fluent themes are driven by a brand ramp (10 = darkest … 160 =
+ * lightest, 80 = the brand color itself); light mode uses 80/70/40 for
+ * fills and 160 for tints, dark mode 70/100/110 and 20. The default is
+ * Microsoft's web ramp, kept exact. A custom color is placed at step 80 and
+ * the other steps are derived in OKLCH: lighter steps raise lightness while
+ * holding chroma for the mid tones (as the Fluent ramp does), darker steps
+ * lower both. The same algorithm runs in the settings page for the live
+ * preview (public/fluent-settings.js).</p>
+ *
+ * @since 4.0.0
  */
 
-export interface FluentThemeConfig {
-  /** 首页眉题（站点名 eybrow）是否显示 */
-  showEyebrow: boolean;
-  /** 首页主标题（siteTitle）是否显示 */
-  showSiteTitle: boolean;
-  /** 首页副标题（siteSubtitle）是否显示 */
-  showSiteSubtitle: boolean;
-  /** 主标题字号 px（12-96） */
-  heroTitleSize: number;
-  /** 副标题字号 px（12-96） */
-  heroSubtitleSize: number;
-  /** 浅色模式品牌色（6 位 hex） */
-  accentColor: string;
-  /** 深色模式品牌色（6 位 hex） */
-  darkAccentColor: string;
-}
+export interface FluentConfig { brand: string; }
+export const DEFAULT_BRAND = '#0f6cbd';
+export const DEFAULTS: FluentConfig = { brand: DEFAULT_BRAND };
+export const PRESETS = [
+  { label: 'Fluent 蓝', color: '#0f6cbd' },
+  { label: '靛紫', color: '#5b5fc7' },
+  { label: '青绿', color: '#03787c' },
+  { label: '森绿', color: '#107c10' },
+  { label: '暖橙', color: '#c43e1c' },
+  { label: '矢车菊', color: '#4f6bed' }
+] as const;
 
-export const FLUENT_THEME_DEFAULTS: FluentThemeConfig = {
-  showEyebrow: true,
-  showSiteTitle: true,
-  showSiteSubtitle: true,
-  heroTitleSize: 32,
-  heroSubtitleSize: 16,
-  accentColor: '#0f6cbd',
-  darkAccentColor: '#479ef5',
+export const STEPS = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160] as const;
+const WEB_RAMP: Record<number, string> = {
+  10: '#061724', 20: '#082338', 30: '#0a2e4a', 40: '#0c3b5e', 50: '#0e4775', 60: '#0f548c', 70: '#115ea3', 80: '#0f6cbd',
+  90: '#2886de', 100: '#479ef5', 110: '#62abf5', 120: '#77b7f7', 130: '#96c6fa', 140: '#b4d6fa', 150: '#cfe4fa', 160: '#ebf3fc'
+};
+/** step → [lightness move (toward white for >80, toward black for <80), chroma factor] */
+const SHAPE: Record<number, [number, number]> = {
+  10: [0.74, 0.32], 20: [0.64, 0.45], 30: [0.54, 0.58], 40: [0.42, 0.7], 50: [0.3, 0.8], 60: [0.2, 0.9], 70: [0.1, 0.98], 80: [0, 1],
+  90: [0.12, 1], 100: [0.26, 1], 110: [0.36, 0.9], 120: [0.44, 0.8], 130: [0.56, 0.65], 140: [0.68, 0.5], 150: [0.8, 0.32], 160: [0.92, 0.12]
 };
 
-export const HERO_TITLE_SIZE_OPTIONS = [24, 28, 32, 36, 40, 48] as const;
-export const HERO_SUBTITLE_SIZE_OPTIONS = [12, 14, 16, 18, 20] as const;
-
-const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
-
-function boolOf(value: unknown): boolean {
-  return value === 'on' || value === 'true' || value === true || value === 1 || value === '1';
-}
-
-function sizeOf(value: unknown, fallback: number): number {
-  const n = Math.round(Number(value));
-  if (!Number.isFinite(n)) return fallback;
-  return Math.min(96, Math.max(12, n));
-}
-
-function colorOf(value: unknown, fallback: string): string {
-  const raw = String(value ?? '').trim();
-  return HEX_COLOR.test(raw) ? raw.toLowerCase() : fallback;
-}
-
-export function normalizeThemeConfig(raw?: unknown): FluentThemeConfig {
+const HEX = /^#[0-9a-f]{6}$/;
+export function normalizeConfig(raw: unknown): FluentConfig {
   const input = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
-  return {
-    showEyebrow: boolOf(input.showEyebrow ?? FLUENT_THEME_DEFAULTS.showEyebrow),
-    showSiteTitle: boolOf(input.showSiteTitle ?? FLUENT_THEME_DEFAULTS.showSiteTitle),
-    showSiteSubtitle: boolOf(input.showSiteSubtitle ?? FLUENT_THEME_DEFAULTS.showSiteSubtitle),
-    heroTitleSize: sizeOf(input.heroTitleSize, FLUENT_THEME_DEFAULTS.heroTitleSize),
-    heroSubtitleSize: sizeOf(input.heroSubtitleSize, FLUENT_THEME_DEFAULTS.heroSubtitleSize),
-    accentColor: colorOf(input.accentColor, FLUENT_THEME_DEFAULTS.accentColor),
-    darkAccentColor: colorOf(input.darkAccentColor, FLUENT_THEME_DEFAULTS.darkAccentColor),
-  };
+  const brand = String(input.brand ?? input.accentColor ?? '').trim().toLowerCase();
+  return { brand: HEX.test(brand) ? brand : DEFAULT_BRAND };
 }
 
-/** 从表单 body 解析配置（开关由前端同步到隐藏字段，值为 'on'/'off'）。 */
-export function themeConfigFromForm(body: Record<string, unknown>): FluentThemeConfig {
-  const current = normalizeThemeConfig(body); // 先按通用规则清洗
-  // 隐藏字段显式携带 'off' 时覆盖默认 true 语义
-  const pick = (key: 'showEyebrow' | 'showSiteTitle' | 'showSiteSubtitle'): boolean => {
-    const raw = body[key];
-    if (raw === 'on' || raw === true || raw === 'true') return true;
-    if (raw === 'off' || raw === false || raw === 'false') return false;
-    return current[key];
-  };
-  return {
-    ...current,
-    showEyebrow: pick('showEyebrow'),
-    showSiteTitle: pick('showSiteTitle'),
-    showSiteSubtitle: pick('showSiteSubtitle'),
-  };
+/* ---------- color math (sRGB ⇄ OKLab) ---------- */
+const toLinear = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+const toGamma = (c: number) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
+function hexToOklch(hex: string): [number, number, number] {
+  const [r, g, b] = [1, 3, 5].map((i) => toLinear(parseInt(hex.slice(i, i + 2), 16) / 255));
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+  return [L, Math.hypot(A, B), Math.atan2(B, A)];
+}
+function oklchToRgb(L: number, C: number, h: number): [number, number, number] {
+  const A = C * Math.cos(h); const B = C * Math.sin(h);
+  const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3;
+  const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3;
+  const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3;
+  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+}
+function oklchToHex(L: number, C: number, h: number): string {
+  let chroma = C;
+  let rgb = oklchToRgb(L, chroma, h);
+  // Reduce chroma until the color fits in sRGB.
+  while (rgb.some((v) => v < -0.0005 || v > 1.0005) && chroma > 0.001) { chroma *= 0.95; rgb = oklchToRgb(L, chroma, h); }
+  return `#${rgb.map((v) => Math.round(Math.min(1, Math.max(0, toGamma(Math.min(1, Math.max(0, v))))) * 255).toString(16).padStart(2, '0')).join('')}`;
 }
 
-/**
- * 生成注入到布局 <head> 的样式覆盖。
- * - 尺寸：--fluent-hero-* 变量（前台 CSS 在其上读取）
- * - 颜色：覆盖 Fluent 品牌令牌（组件与主题共用一个 :root 作用域），
- *   hover/pressed 等衍生色用 color-mix 从主色推导，避免写死衍生值。
- */
-export function buildThemeCss(config: FluentThemeConfig): string {
-  const mix = (base: string, target: string, percent: number) =>
-    `color-mix(in srgb, ${base} ${percent}%, ${target})`;
-  const light = config.accentColor;
-  const la = (pct: number) => mix(light, 'black', pct);  // 加深
-  const lb = (pct: number) => mix(light, 'white', pct);  // 提亮
-  const dark = config.darkAccentColor;
-  const da = (pct: number) => mix(dark, 'white', pct);   // 提亮
-  const db = (pct: number) => mix(dark, 'black', pct);   // 加深
+export function brandRamp(brand: string): Record<number, string> {
+  if (brand === DEFAULT_BRAND || !HEX.test(brand)) return { ...WEB_RAMP };
+  const [L, C, h] = hexToOklch(brand);
+  const ramp: Record<number, string> = {};
+  for (const step of STEPS) {
+    const [move, chroma] = SHAPE[step];
+    if (step === 80) { ramp[step] = brand; continue; }
+    const lightness = step > 80 ? L + (0.975 - L) * move : L * (1 - move);
+    ramp[step] = oklchToHex(lightness, C * chroma, h);
+  }
+  return ramp;
+}
 
-  const lightBlock = [
-    `--fluent-hero-title-size:${config.heroTitleSize}px`,
-    `--fluent-hero-subtitle-size:${config.heroSubtitleSize}px`,
-    `--colorBrandBackground:${light}`,
-    `--colorBrandBackgroundHover:${la(88)}`,
-    `--colorBrandBackgroundPressed:${la(74)}`,
-    `--colorBrandBackgroundSelected:${la(88)}`,
-    `--colorBrandBackgroundStatic:${light}`,
-    `--colorBrandBackground2:${la(82)}`,
-    `--colorBrandForeground1:${light}`,
-    `--colorBrandForeground1Hover:${la(82)}`,
-    `--colorBrandForeground1Pressed:${la(70)}`,
-    `--colorBrandForeground1Selected:${la(82)}`,
-    `--colorBrandForeground2:${la(80)}`,
-    `--colorBrandForeground2Hover:${la(68)}`,
-    `--colorBrandForeground2Pressed:${la(55)}`,
-    `--colorBrandForeground2Selected:${la(80)}`,
-    `--colorBrandForegroundLink:${la(80)}`,
-    `--colorBrandForegroundLinkHover:${la(68)}`,
-    `--colorBrandForegroundLinkPressed:${la(55)}`,
-    `--colorBrandForegroundLinkSelected:${la(80)}`,
-    `--colorCompoundBrandForeground1:${light}`,
-    `--colorCompoundBrandForeground1Hover:${la(82)}`,
-    `--colorCompoundBrandForeground1Pressed:${la(70)}`,
-    `--colorCompoundBrandBackground:${light}`,
-    `--colorCompoundBrandBackgroundHover:${la(88)}`,
-    `--colorCompoundBrandBackgroundPressed:${la(74)}`,
-    `--colorCompoundBrandBackgroundSelected:${la(88)}`,
-    `--colorBrandStroke1:${la(88)}`,
-    `--colorBrandStroke2:${lb(62)}`,
-    `--colorCompoundBrandStroke:${light}`,
-    `--colorCompoundBrandStrokeHover:${la(82)}`,
-    `--colorCompoundBrandStrokePressed:${la(70)}`,
-  ].join(';');
-
-  const darkBlock = [
-    `--colorBrandBackground:${dark}`,
-    `--colorBrandBackgroundHover:${da(88)}`,
-    `--colorBrandBackgroundPressed:${db(85)}`,
-    `--colorBrandBackgroundSelected:${da(88)}`,
-    `--colorBrandBackgroundStatic:${light}`,
-    `--colorBrandBackground2:${da(85)}`,
-    `--colorBrandForeground1:${dark}`,
-    `--colorBrandForeground1Hover:${da(88)}`,
-    `--colorBrandForeground1Pressed:${db(85)}`,
-    `--colorBrandForeground1Selected:${da(88)}`,
-    `--colorBrandForeground2:${da(85)}`,
-    `--colorBrandForeground2Hover:${da(72)}`,
-    `--colorBrandForeground2Pressed:${da(55)}`,
-    `--colorBrandForeground2Selected:${da(85)}`,
-    `--colorBrandForegroundLink:${da(85)}`,
-    `--colorBrandForegroundLinkHover:${da(72)}`,
-    `--colorBrandForegroundLinkPressed:${da(55)}`,
-    `--colorBrandForegroundLinkSelected:${da(85)}`,
-    `--colorCompoundBrandForeground1:${dark}`,
-    `--colorCompoundBrandForeground1Hover:${da(88)}`,
-    `--colorCompoundBrandForeground1Pressed:${db(85)}`,
-    `--colorCompoundBrandBackground:${dark}`,
-    `--colorCompoundBrandBackgroundHover:${da(88)}`,
-    `--colorCompoundBrandBackgroundPressed:${db(85)}`,
-    `--colorCompoundBrandBackgroundSelected:${da(88)}`,
-    `--colorBrandStroke1:${da(88)}`,
-    `--colorBrandStroke2:${db(65)}`,
-    `--colorCompoundBrandStroke:${dark}`,
-    `--colorCompoundBrandStrokeHover:${da(88)}`,
-    `--colorCompoundBrandStrokePressed:${db(85)}`,
-  ].join(';');
-
-  return `:root{${lightBlock}} :root[data-theme="dark"]{${darkBlock}}`;
+/** The <style> that replaces the default ramp, or '' for the default brand. */
+export function brandStyle(config: FluentConfig): string {
+  if (config.brand === DEFAULT_BRAND) return '';
+  const ramp = brandRamp(config.brand);
+  return `<style id="fluent-brand">:root{${STEPS.map((step) => `--f-brand-${step}:${ramp[step]}`).join(';')}}</style>`;
 }

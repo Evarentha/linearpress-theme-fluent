@@ -1,18 +1,16 @@
 {
   "id": "fluentui-theme",
-  "name": "Fluent UI 主题",
-  "version": "3.0.0",
-  "description": "基于 Fluent 2 设计语言的完整主题：前台与后台全 Fluent 化，内置深色模式；Fluent Web Components 全量打包进包内，完全离线可用。",
+  "name": "Fluent 2 主题",
+  "version": "4.0.0",
+  "description": "按微软 Fluent 2 设计规范重写的主题：Fluent 色彩、字体层级、阴影层次、圆角与动效，Fluent 图标，前台卡片式阅读与后台应用式导航，内置深色模式与品牌色设置。",
   "author": "LinearPress",
-  "icon": "🎨",
+  "icon": "Fluent",
   "type": "theme",
   "main": "index.ts",
-  "runtime": "cordis",
+  "views": "views",
   "public": "public",
-  "styles": [
-    "fluent-tokens.css",
-    "fluentui-theme.css",
-    "fluentui-admin.css"
-  ],
-  "scripts": []
+  "settings": "/admin/appearance/fluent",
+  "scripts": [
+    { "file": "fluent-settings.js", "scope": "admin", "paths": ["/admin/appearance/fluent"] }
+  ]
 }

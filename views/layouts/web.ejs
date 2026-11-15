@@ -1,22 +1,87 @@
-<!--
-  Fluent Web Layout Shell
-
-  Front-end HTML layout that overrides the core layouts/web view.
+<%#
+  Fluent theme · public layout: acrylic header with a TabList nav, canvas, footer.
 
   Authors:
-  MoyuZJ <moyuzj@moyuzj.cn> @LinearTeam - Made in China with ♥
-  worryzu <worryzu@gmail.com> @LinearTeam
+  MoyuZJ <moyuzj@evarentha.com> @LinearTeam - Made in China with ♥
+  worryzu <worryzu@evarentha.com> @LinearTeam
 
   Copyright (C) 2026 Evarentha
   SPDX-License-Identifier: GPL-3.0-or-later
--->
 
-<!--
-  Front-end layout shell for the Fluent UI theme, overriding the core
-  layouts/web view. Emits the site document skeleton: header with nav and
-  dark-mode switch, main region, and footer, plus the token and theme
-  stylesheets, the Fluent Web Components bundle, and fluent-init.js.
-  @since 1.0.0
--->
-
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><%= title %> · <%= siteConfig.siteName || siteConfig.title || 'LinearPress' %></title><meta name="description" content="<%= siteConfig.siteDescription || siteConfig.description %>"><% if (siteConfig.customCss) { %><style><%- siteConfig.customCss %></style><% } %><% if (currentPath === '/oobe') { %><link rel="stylesheet" href="/css/style.css"><% } %><% for (const css of pluginStyleUrls) { %><link rel="stylesheet" href="<%= css %>"><% } %><% if (typeof fluentThemeCss === 'string' && fluentThemeCss) { %><style><%- fluentThemeCss %></style><% } %><script>(function(){try{var t=localStorage.getItem('fluent-theme');if(!t)t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='light';}})();</script><script type="module" src="/plugins/fluentui-theme/vendor/web-components-all.min.js"></script><script type="module" src="/plugins/fluentui-theme/fluent-init.js"></script></head><body class="fluent-site"><header class="f-header"><div class="f-header-inner"><a class="f-brand" href="/"><%= siteConfig.siteName || 'LINEARPRESS' %></a><nav class="f-nav"><a class="f-nav-link<%= currentPath === '/' ? ' active' : '' %>" href="/">首页</a><a class="f-nav-link<%= currentPath === '/archive' ? ' active' : '' %>" href="/archive">归档</a><% if (currentUser) { %><a class="f-nav-link" href="/admin">后台</a><form action="/logout" method="post" class="f-logout"><fluent-button type="submit" appearance="subtle">退出</fluent-button></form><% } else { %><a class="f-nav-link" href="/login">登录</a><a class="f-nav-link" href="/register">注册</a><% } %><label class="f-theme-toggle" title="切换深色模式"><span class="f-theme-toggle-label">深色</span><fluent-switch data-fluent-theme-toggle aria-label="切换深色模式"></fluent-switch></label></nav></div></header><main class="f-main"><div class="f-container"><%- body %></div></main><footer class="f-footer"><div class="f-container"><% if (siteConfig.footerCopyright !== 'none') { %><p class="f-footer-copy"><%= siteConfig.footerCopyright === 'running-on' ? ('本站正在运行基于 CordisJS 的 LinearPress 版本 ' + LINEARPRESS_VERSION + '。') : ('由 LinearPress 强力驱动，基于 CordisJS。正在运行的版本为：' + LINEARPRESS_VERSION + '。') %></p><% } %><% if (siteConfig.icpNumber) { %><p class="f-footer-icp"><%= siteConfig.icpProvince ? siteConfig.icpProvince : '' %>ICP备<%= siteConfig.icpNumber %>号<% if (siteConfig.policeNumber) { %> | 国公网安备第<%= siteConfig.policeNumber %>号<% } %></p><% } %><% if (siteConfig.footerHtml) { %><div class="f-footer-html"><%- siteConfig.footerHtml %></div><% } %><p class="f-footer-meta">TYPE-SAFE PUBLISHING / <%= new Date().getFullYear() %></p></div></footer><% for (const script of pluginScriptUrls) { %><script src="<%= script %>"></script><% } %></body></html>
+  Same locals and slots as the core public layout: head, header.tools,
+  footer, body.end and the menus web.nav / user.menu.
+%><%
+const initial = (siteConfig.siteName || 'L').trim().slice(0, 1).toUpperCase();
+const navItems = [{ title: '首页', href: '/' }, { title: '文章', href: '/posts' }, { title: '归档', href: '/archive' }, ...menu('web.nav')];
+const isCurrent = (href) => href === '/' ? currentPath === '/' : (currentPath === href || currentPath.startsWith(href + '/'));
+%><!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title><%= typeof pageTitle !== 'undefined' && pageTitle ? `${pageTitle} · ${siteConfig.siteName}` : (siteConfig.siteTitle ? `${siteConfig.siteName} · ${siteConfig.siteTitle}` : siteConfig.siteName) %></title>
+<meta name="description" content="<%= typeof metaDescription !== 'undefined' && metaDescription ? metaDescription : (siteConfig.siteDescription || siteConfig.siteSubtitle || siteConfig.siteName) %>">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="<%= siteConfig.siteName %>" href="/feed.xml">
+<% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { %><link rel="canonical" href="<%= canonicalUrl %>">
+<% } %><script>(function(){try{var t=localStorage.getItem('lp-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}addEventListener('pagereveal',function(e){if(e.viewTransition)document.documentElement.classList.add('f-vt')})})()</script>
+<link rel="stylesheet" href="/css/lp-base.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/css/web.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/plugins/fluentui-theme/fluent-icons.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/plugins/fluentui-theme/fluent.css?v=<%= assetVersion %>">
+<link rel="stylesheet" href="/plugins/fluentui-theme/fluent-web.css?v=<%= assetVersion %>">
+<% for (const href of styleUrls) { %><link rel="stylesheet" href="<%= href %>">
+<% } %><%- slot('head') %>
+</head>
+<body class="lp-web f-web">
+<a class="skip-link" href="#main">跳到正文</a>
+<header class="site-header f-header" data-site-header>
+  <div class="wrap">
+    <button type="button" class="f-icon-btn nav-toggle" data-nav-toggle aria-label="打开导航" aria-expanded="false" aria-controls="site-nav"><%- include('../fluentui-theme/icon', { name: 'navigation' }) %></button>
+    <a class="site-brand f-brand" href="/"><span class="f-logo" aria-hidden="true"><%= initial %></span><span><%= siteConfig.siteName %></span></a>
+    <nav class="site-nav tabs f-site-nav" id="site-nav" aria-label="主导航">
+      <% for (const item of navItems) { %><a href="<%= item.href %>"<%- isCurrent(item.href) ? ' aria-current="page"' : '' %>><%= item.title %></a><% } %>
+    </nav>
+    <div class="site-tools">
+      <%- slot('header.tools') %>
+      <button type="button" class="f-icon-btn" data-theme-toggle aria-label="切换浅色 / 深色" title="切换浅色 / 深色"><%- include('../fluentui-theme/icon', { name: 'dark_theme' }) %></button>
+      <% if (currentUser) { %>
+      <div class="menu user-menu" data-menu>
+        <button type="button" class="menu-trigger" aria-haspopup="true" aria-expanded="false" aria-label="账户菜单"><%- avatar(currentUser, 32) %></button>
+        <div class="menu-panel" role="menu">
+          <div class="menu-head"><%- avatar(currentUser, 40) %><strong><%= displayName(currentUser) %></strong><span>@<%= currentUser.username %></span></div>
+          <hr>
+          <% for (const item of menu('user.menu')) { %><a role="menuitem" href="<%= item.href %>"><%- include('../fluentui-theme/icon', { name: item.href === '/account' ? 'lock_closed' : /edit/.test(item.href) ? 'edit' : 'person' }) %><%= item.title %></a><% } %>
+          <% if (canAdmin) { %><a role="menuitem" href="/admin"><%- include('../fluentui-theme/icon', { name: 'board' }) %>管理后台</a><% } %>
+          <hr>
+          <form method="post" action="/logout"><button type="submit" role="menuitem" class="danger"><%- include('../fluentui-theme/icon', { name: 'sign_out' }) %>退出登录</button></form>
+        </div>
+      </div>
+      <% } else { %>
+      <a class="btn btn-primary f-signin" href="/login<%= currentPath !== '/' ? `?next=${encodeURIComponent(currentUrl)}` : '' %>">登录</a>
+      <% } %>
+    </div>
+  </div>
+</header>
+<main id="main" class="site-main f-main">
+<% if (flashes.length || (typeof alerts !== 'undefined' && alerts && alerts.length)) { %><div class="wrap wrap-read f-flash"><%- include('partials/alerts') %></div><% } %>
+<%- body %>
+</main>
+<footer class="site-footer f-footer">
+  <div class="wrap">
+    <div class="footer-lines">
+      <span>© <%= new Date().getFullYear() %> <%= siteConfig.siteName %><% if (siteConfig.footerCopyright === 'powered-by') { %> · 由 <a href="https://github.com/Evarentha/linearpress" rel="noopener">LinearPress</a> 驱动<% } else if (siteConfig.footerCopyright === 'running-on') { %> · LinearPress <%= LINEARPRESS_VERSION %><% } %></span>
+      <% if (siteConfig.icpNumber) { %><span><a href="https://beian.miit.gov.cn/" rel="noopener"><%= siteConfig.icpProvince %>ICP备<%= siteConfig.icpNumber %>号</a><% if (siteConfig.policeNumber) { %> · <%= siteConfig.icpProvince %>公网安备<%= siteConfig.policeNumber %>号<% } %></span><% } %>
+      <% if (siteConfig.footerHtml) { %><div class="footer-html"><%- siteConfig.footerHtml %></div><% } %>
+      <%- slot('footer') %>
+    </div>
+    <div class="footer-links"><a href="/archive"><%- include('../fluentui-theme/icon', { name: 'archive', size: 16 }) %>归档</a><a href="/feed.xml"><%- include('../fluentui-theme/icon', { name: 'rss', size: 16 }) %>RSS 订阅</a></div>
+  </div>
+</footer>
+<script src="/js/lp.js?v=<%= assetVersion %>" defer></script>
+<script src="/plugins/fluentui-theme/fluent.js?v=<%= assetVersion %>" defer></script>
+<% for (const script of scripts) { %><script src="<%= script.src %>"<%- script.module ? ' type="module"' : ' defer' %>></script>
+<% } %><%- slot('body.end') %>
+</body>
+</html>
